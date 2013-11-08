@@ -8,16 +8,20 @@ namespace Intahwebz\Routing;
  */
 class RouteMapping implements \Intahwebz\RouteMapping {
 
-    private     $scheme;		//"BaseReality\\Controller",
+    private     $className;
 
-    private     $className;		// "Images",
+    private     $methodName;
 
-    private     $methodName;		// "show",
+    function __construct($routeMappingInfo) {
 
-    public function	__construct($routeMappingInfo) {
-        $this->scheme = $routeMappingInfo[0];
-        $this->className = $routeMappingInfo[1];
-        $this->methodName = $routeMappingInfo[2];
+        if (count($routeMappingInfo) == 3) {
+            $this->className = $routeMappingInfo[0].'\\'.$routeMappingInfo[1];
+            $this->methodName = $routeMappingInfo[2];
+        }
+        else{
+            $this->className = $routeMappingInfo[0];
+            $this->methodName = $routeMappingInfo[1];
+        }
     }
 
     /**
@@ -25,22 +29,14 @@ class RouteMapping implements \Intahwebz\RouteMapping {
      *
      * @return string
      */
-    function getClassPath(){
+    function getClassPath() {
         $classPath = $this->className;
-
-        if(mb_strlen($this->scheme) > 0){
-            $classPath = $this->scheme."\\".$this->className;
-        }
 
         return $classPath;
     }
 
     function __toString() {
-        return $this->scheme.'\\'.$this->className.'::'.$this->methodName;
-    }
-    
-    function getScheme() {
-        return $this->scheme;
+        return $this->className.'::'.$this->methodName;
     }
 
     function getMethodName() {
