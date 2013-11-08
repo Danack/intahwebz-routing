@@ -41,7 +41,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $blankRequest = new DefinedRequest($requestDefine);
 
 
-        $domain = new \Intahwebz\DomainExample($blankRequest);
+        $domain = new \Intahwebz\DomainExample($blankRequest, 'basereality.test');
 
         $this->router = new Router($domain,
             $objectCache, 
@@ -167,7 +167,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testException() {
-        $this->setExpectedException(\Intahwebz\Router\RouteMissingException::class);
+        $this->setExpectedException(\Intahwebz\Routing\RouteMissingException::class);
         $requestDefine = $this->standardRequestDefine;
         $requestDefine['path'] = '/ThisDoesntExist';
         $blankRequest = new DefinedRequest($requestDefine);
@@ -201,7 +201,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetRouteMissingException() {
-        $this->setExpectedException(\Intahwebz\Router\RouteMissingException::class);
+        $this->setExpectedException(\Intahwebz\Routing\RouteMissingException::class);
         $route = $this->router->getRoute('nonExistantRoute');
         $this->assertNull($route, "Failed to not find non-existent route.");
     }

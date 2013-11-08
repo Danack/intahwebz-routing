@@ -4,8 +4,8 @@
 namespace Intahwebz\Router\Tests;
 
 use Intahwebz\DomainExample;
-use Intahwebz\Router\HTTPResponse;
-use Intahwebz\Router\DefinedRequest;
+use Intahwebz\Routing\HTTPResponse;
+use Intahwebz\Routing\DefinedRequest;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase {
 
@@ -21,16 +21,12 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
         );
 
 
-
         $blankRequest = new DefinedRequest($requestDefine);
 
-        $response = new HTTPResponse(new DomainExample($blankRequest));
-
+        $response = new HTTPResponse(new DomainExample($blankRequest, 'basereality.test'));
 
         $this->assertTrue($response->isOK(), "Default isOK isn't true.");
-
         $this->assertTrue($response->isOK(200), "Default isOK(200) isn't true.");
-
         $response->setErrorStatus(['reason' => 'This is a test error']);
 
         $this->assertEquals($response->getStatus(), 501, 'Incorrect default error code');

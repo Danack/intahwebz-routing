@@ -78,7 +78,7 @@ class Router implements \Intahwebz\Router {
     function initRouting($routingInfoArray){
         foreach($routingInfoArray as $routingInfo){
             $name = $routingInfo['name'];
-            $route = new \Intahwebz\Router\Route($routingInfo);
+            $route = new \Intahwebz\Routing\Route($routingInfo);
             $this->routesByName[$name] = $route;
         }
     }
