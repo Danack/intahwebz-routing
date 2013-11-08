@@ -15,7 +15,7 @@
         <whitelist>
             <directory>./src/Intahwebz/Routing</directory>
             <exclude>
-                <directory>./src/Intahwebz/Routing/Tests</directory>
+                <!-- <directory>./src/Intahwebz/Routing/Tests</directory> -->
             </exclude>
         </whitelist>
     </filter>

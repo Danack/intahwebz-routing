@@ -7,8 +7,8 @@ use Intahwebz\Cache\NullObjectCache;
 use Intahwebz\Logger\NullLogger;
 
 use Intahwebz\Request;
-use Intahwebz\Router\Router;
-use Intahwebz\Router\DefinedRequest;
+use Intahwebz\Routing\Router;
+use Intahwebz\Routing\DefinedRequest;
 
 class RouterTest extends \PHPUnit_Framework_TestCase {
 
