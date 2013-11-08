@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Danack/intahwebz-core.git",
-                "reference": "1e1c34078ece71d43ab2175c9684224cbb837b23"
+                "reference": "cc8178444f28adfb1b29d30ae0d43bed11df0e61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/1e1c34078ece71d43ab2175c9684224cbb837b23",
-                "reference": "1e1c34078ece71d43ab2175c9684224cbb837b23",
+                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/cc8178444f28adfb1b29d30ae0d43bed11df0e61",
+                "reference": "cc8178444f28adfb1b29d30ae0d43bed11df0e61",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 "intahwebz",
                 "library"
             ],
-            "time": "2013-11-08 00:16:18"
+            "time": "2013-11-08 01:48:34"
         },
         {
             "name": "psr/log",

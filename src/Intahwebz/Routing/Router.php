@@ -25,8 +25,6 @@ class Router implements \Intahwebz\Router {
 
     private $name;
 
-    private $logger;
-
     /**
      * @var ObjectCache
      */
@@ -39,13 +37,11 @@ class Router implements \Intahwebz\Router {
     function	__construct(
         \Intahwebz\Domain $domain,
         ObjectCache $objectCache,
-        LoggerInterface $logger,
         $routeCollectionName,
         $pathToRouteInfo
     ){
         $this->domain = $domain;
         $this->objectCache = $objectCache;
-        $this->logger = $logger;
         $this->init($routeCollectionName, $pathToRouteInfo);
     }
 
@@ -62,8 +58,6 @@ class Router implements \Intahwebz\Router {
         if ($this->routesByName) {
             return;
         }
-
-        $this->logger->info("Route info $routeCollectionName was not cached.");
 
         $routingInfo = require $pathToRouteInfo;
         $this->initRouting($routingInfo);
@@ -96,7 +90,6 @@ class Router implements \Intahwebz\Router {
             $matched = $route->matchRequestAndStoreParams($request);
 
             if($matched == true){
-                $this->logger->info("Found route ".$route->getName());
                 return $route;
             }
         }
