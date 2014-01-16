@@ -28,18 +28,6 @@ class Route implements \Intahwebz\Route{
 
     private $template = null;
 
-    public function getACLResourceName() {
-        return $this->resourceName;
-    }
-
-    public function getTemplate() {
-        return $this->template;
-    }
-
-    public function getACLPrivilegeName() {
-        return $this->privilegeName;
-    }
-
     /**
      * The parameters extracted from a request.
      * @var array
@@ -53,6 +41,18 @@ class Route implements \Intahwebz\Route{
 
     /** @var callable */
     public $callable;
+
+    public function getACLResourceName() {
+        return $this->resourceName;
+    }
+
+    public function getTemplate() {
+        return $this->template;
+    }
+
+    public function getACLPrivilegeName() {
+        return $this->privilegeName;
+    }
 
     public function getRouteParams() {
         return $this->routeParams;

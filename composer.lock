@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "88a12b706234adb3f52b4bfd8c0c3190",
+    "hash": "1fe65ede2648f0791c5f8c1275093820",
     "packages": [
         {
             "name": "intahwebz/core",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Danack/intahwebz-core.git",
-                "reference": "cc8178444f28adfb1b29d30ae0d43bed11df0e61"
+                "reference": "f29b0e5cf852d7f4a6dd76aac654d29c238d4218"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/cc8178444f28adfb1b29d30ae0d43bed11df0e61",
-                "reference": "cc8178444f28adfb1b29d30ae0d43bed11df0e61",
+                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/f29b0e5cf852d7f4a6dd76aac654d29c238d4218",
+                "reference": "f29b0e5cf852d7f4a6dd76aac654d29c238d4218",
                 "shasum": ""
             },
             "require": {
@@ -36,7 +36,8 @@
                 {
                     "name": "Dan Ackroyd",
                     "email": "Danack@basereality.com",
-                    "homepage": "http://www.basereality.com"
+                    "homepage": "http://www.basereality.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Core library that defines common interfaces used by the rest of the intahwebz..",
@@ -45,7 +46,51 @@
                 "intahwebz",
                 "library"
             ],
-            "time": "2013-11-08 01:48:34"
+            "time": "2014-01-15 15:03:36"
+        },
+        {
+            "name": "intahwebz/mb_extra",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Danack/mb_extra.git",
+                "reference": "4a8d7792c8cc1f9bbfd4d90b717f6352e50fbf28"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Danack/mb_extra/zipball/4a8d7792c8cc1f9bbfd4d90b717f6352e50fbf28",
+                "reference": "4a8d7792c8cc1f9bbfd4d90b717f6352e50fbf28",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Intahwebz": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dan Ackroyd",
+                    "email": "Danack@basereality.com",
+                    "homepage": "http://www.basereality.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A collection of PHP multi-byte string functions that are not present in the mb_string extension.",
+            "keywords": [
+                "mb_string",
+                "php",
+                "utf-8",
+                "utf8"
+            ],
+            "time": "2013-10-11 20:18:32"
         },
         {
             "name": "psr/log",
@@ -333,16 +378,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.28",
+            "version": "3.7.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d"
+                "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
-                "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
+                "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
                 "shasum": ""
             },
             "require": {
@@ -403,7 +448,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-10-17 07:27:40"
+            "time": "2014-01-15 06:46:38"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -456,17 +501,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.3.6",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "6bb881b948368482e1abf1a75c08bcf88a1c5fc3"
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/6bb881b948368482e1abf1a75c08bcf88a1c5fc3",
-                "reference": "6bb881b948368482e1abf1a75c08bcf88a1c5fc3",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4e1a237fc48145fae114b96458d799746ad89aa0",
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0",
                 "shasum": ""
             },
             "require": {
@@ -475,7 +520,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -499,7 +544,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-09-22 18:04:39"
+            "time": "2013-12-28 08:12:03"
         }
     ],
     "aliases": [
@@ -507,7 +552,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "intahwebz/core": 20
+        "intahwebz/core": 20,
+        "intahwebz/mb_extra": 20
     },
     "platform": [
 

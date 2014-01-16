@@ -2,7 +2,8 @@
     "name": "intahwebz/routing",
 
     "require":{
-        "intahwebz/core": "dev-master"
+        "intahwebz/core": "dev-master",
+        "intahwebz/mb_extra": "dev-master"
     },
 
     "require-dev": {
