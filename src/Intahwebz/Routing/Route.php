@@ -49,20 +49,20 @@ class Route implements \Intahwebz\Route{
     /**
      * @var  $variables RouteVariable[]
      */
-    public 	$variables = array();
+    public $variables = array();
 
-    /** @var RouteMapping */
-    public $mapping;
+    /** @var callable */
+    public $callable;
 
     public function getRouteParams() {
         return $this->routeParams;
     }
 
     /**
-     * @return \Intahwebz\RouteMapping
+     * @return callable
      */
-    public function getMapping() {
-        return $this->mapping;
+    public function getCallable() {
+        return $this->callable;
     }
 
 
@@ -97,8 +97,8 @@ class Route implements \Intahwebz\Route{
             $this->template = $routeInfo['template'];
         }
 
-        if (array_key_exists('mapping', $routeInfo) == true) {
-            $this->mapping = new RouteMapping($routeInfo['mapping']);
+        if (array_key_exists('callable', $routeInfo) == true) {
+            $this->callable = $routeInfo['callable'];
         }
 
         $firstBracketPosition = mb_strpos($this->pattern, '{');
@@ -255,6 +255,7 @@ class Route implements \Intahwebz\Route{
         return $mergedParameters;
     }
 
+
     /**
      * Generate a list of arguments to be passed to a controller, from the route
      * and request.
@@ -267,17 +268,16 @@ class Route implements \Intahwebz\Route{
      */
     function mapParametersToFunctionArguments(Request $request) {
 
-        $reflector = new \ReflectionMethod($this->mapping->getClassPath(), $this->mapping->getMethodName());
+        $classPath = $this->callable[0];
+        $methodName = $this->callable[1];
+
+        $reflector = new \ReflectionMethod($classPath, $methodName);
 
         $parameters = $reflector->getParameters();
 
         $arguments = array();
 
-        //later value for that key will overwrite the previous one, so higher priority values come later
-        $mergedParameters = array();
-        $mergedParameters = array_merge($mergedParameters, $this->defaults);
-        $mergedParameters = array_merge($mergedParameters, $this->routeParams);
-        $mergedParameters = array_merge($mergedParameters, $request->getRequestParams());
+        $mergedParameters = $this-getMergedParameters();
 
         foreach ($parameters as $param) {
             //If we have it as a parameter from the route/request
@@ -293,7 +293,7 @@ class Route implements \Intahwebz\Route{
                 $arguments[] = $param->getDefaultValue();
             }
             else {
-                throw new \RuntimeException("Controller [".$this->mapping->getClassPath()."], method [".$this->mapping->getMethodName()."] requires that you provide a value for the [".$param->name."] argument (because there is no default value or because there is a non optional argument after this one).");
+                throw new \RuntimeException("Controller [".$classPath."], method [".$methodName."] requires that you provide a value for the [".$param->name."] argument (because there is no default value or because there is a non optional argument after this one).");
             }
         }
 

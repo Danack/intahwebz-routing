@@ -59,7 +59,14 @@ class Router implements \Intahwebz\Router {
             return;
         }
 
-        $routingInfo = require $pathToRouteInfo;
+        if (is_array($pathToRouteInfo)) {
+            $routingInfo = $pathToRouteInfo;
+        }
+        else {
+            $routingInfo = require $pathToRouteInfo;
+        }
+        
+        
         $this->initRouting($routingInfo);
         $this->objectCache->put($routeCollectionName, $this->routesByName, 60);
     }
@@ -113,7 +120,7 @@ class Router implements \Intahwebz\Router {
     function generateURLForRoute($routeName, $parameters = array(), $absolute = false){
         foreach ($this->routesByName as $name => $route) {
             if($name == $routeName){
-                return	$route->generateURL($this->domain, $parameters, $absolute);
+                return $route->generateURL($this->domain, $parameters, $absolute);
             }
         }
 
