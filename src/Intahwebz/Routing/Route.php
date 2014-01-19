@@ -54,9 +54,9 @@ class Route implements \Intahwebz\Route{
     /** @var callable */
     public $callable;
 
-    public function getRouteParams() {
-        return $this->routeParams;
-    }
+//    public function getRouteParams() {
+//        return $this->routeParams;
+//    }
 
     /**
      * @return callable
@@ -70,12 +70,12 @@ class Route implements \Intahwebz\Route{
         return $this->name;
     }
 
-    public function getRouteParam($routeParamName) {
-        if (array_key_exists($routeParamName, $this->routeParams)) {
-            return $this->routeParams[$routeParamName];
-        }
-        return null;
-    }
+//    public function getRouteParam($routeParamName) {
+//        if (array_key_exists($routeParamName, $this->routeParams)) {
+//            return $this->routeParams[$routeParamName];
+//        }
+//        return null;
+//    }
 
     /**
      * Makes a route out of an array of config data.
@@ -239,17 +239,18 @@ class Route implements \Intahwebz\Route{
         }
 
         //TODO this is bad state
-        $this->routeParams = $params;
+        //$this->routeParams = $params;
 
-        return true;
+        return $params;
     }
 
 
-    function getMergedParameters(Request $request) {
+    function getMergedParameters(Request $request, $params) {
         //later value for that key will overwrite the previous one, so higher priority values come later
         $mergedParameters = array();
         $mergedParameters = array_merge($mergedParameters, $this->defaults);
-        $mergedParameters = array_merge($mergedParameters, $this->routeParams);
+        //$mergedParameters = array_merge($mergedParameters, $this->routeParams);
+        $mergedParameters = array_merge($mergedParameters, $params);
         $mergedParameters = array_merge($mergedParameters, $request->getRequestParams());
 
         return $mergedParameters;

@@ -94,10 +94,10 @@ class Router implements \Intahwebz\Router {
     function getRouteForRequest(Request $request){
         /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($this->routesByName as $name => $route) {
-            $matched = $route->matchRequestAndStoreParams($request);
+            $params = $route->matchRequestAndStoreParams($request);
 
-            if($matched == true){
-                return $route;
+            if($params !== false){
+                return [$route, $params];
             }
         }
 
