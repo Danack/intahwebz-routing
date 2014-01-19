@@ -146,8 +146,6 @@ return array(
             'filename' => '[^/]+'
         ),
     ),
-
-
     array(
         'name' => 'image',
         'pattern' => '/{path}/{imageID}/{size}/{filename}',
@@ -164,6 +162,10 @@ return array(
         'defaults' => array(
             'path' => 'image',
             'size' => null
+        ),
+        //This syntax is fucking stupid
+        'optional' => array(
+            'size' => true,
         )
     ),
 

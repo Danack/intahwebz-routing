@@ -6,6 +6,19 @@ use Intahwebz\Request;
 
 use Intahwebz\Exception\UnsupportedOperationException;
 
+
+//function multiReplace($pattern, $replace, $string) {
+//
+//    while($position = strrpos($string, $pattern)) {
+//        $before = substr($string, 0, $position);
+//        $after = substr($string, $position);
+//        $string = $before.str_replace($pattern, $replace, $after);
+//    }
+//
+//    return $string;
+//}
+
+
 class Route implements \Intahwebz\Route{
 
     use \Intahwebz\SafeAccess;
@@ -156,26 +169,49 @@ class Route implements \Intahwebz\Route{
 
                 //  - /images/2 or /images/ or /images
 
-                if(mb_substr($nextPart, mb_strlen($nextPart)-1)   == '/'){
-                    //$nextPart = mb_substr($nextPart, 0, mb_strlen($nextPart)-1) ."(?:/)?";
-                    $nextPart = mb_substr($nextPart, 0, mb_strlen($nextPart)-1) ."(?:/|$)";
-                }
+//                if(mb_substr($nextPart, mb_strlen($nextPart)-1)   == '/'){
+//                    //$nextPart = mb_substr($nextPart, 0, mb_strlen($nextPart)-1) ."(?:/)?";
+//                    $nextPart = mb_substr($nextPart, 0, mb_strlen($nextPart)-1) ."(?:/|$)";
+//                }
 
                 $this->regex .= $nextPart;
             }
 
-            $routerVariable = new RouteVariable($variableName, $variableNameWithWrapping);
-
-//			$requiredParameter = false;
-            if(array_key_exists($variableName, $this->defaults) == true){
-                $routerVariable->setDefault($this->defaults[$variableName]);
+            $optional = false;
+            if(array_key_exists('optional', $routeInfo) == true){
+                if (array_key_exists($variableName, $routeInfo['optional']) == true) {
+                    //$routerVariable->setDefault($this->defaults[$variableName]);
+                    $optional = $routeInfo['optional'][$variableName];
+                }
             }
-//			else{
-//				$requiredParameter = true;
-//			}
+            
+            $default = null;
+            if(array_key_exists($variableName, $this->defaults) == true){
+                //$routerVariable->setDefault($this->defaults[$variableName]);
+                $default = $this->defaults[$variableName];
+            }
 
+            $requirement = null;
             if(array_key_exists($variableName, $requirements) == true){
-                $routerVariable->setRequirement($requirements[$variableName]);
+                //$routerVariable->setRequirement($requirements[$variableName]);
+                $requirement = $requirements[$variableName];
+            }
+
+            $routerVariable = new RouteVariable(
+                $variableName, 
+                $variableNameWithWrapping, 
+                $default, 
+                $requirement,
+                $optional
+            );
+            
+            if ($optional) {    
+                $lastPos = strlen($this->regex) -1;
+                $lastSlash = strrpos($this->regex, '/');
+                
+                if ($lastSlash == $lastPos) {
+                    $this->regex = substr($this->regex, 0, -1)."(?:/)?";
+                }
             }
 
             $this->regex .= $routerVariable->getRegex();
@@ -185,6 +221,8 @@ class Route implements \Intahwebz\Route{
         }
 
         $this->regex .= mb_substr($this->pattern, $currentPosition);
+
+//        $this->regex = multiReplace('//', '/(?:/)?', $this->regex);
 
         //let there be an optional last slash
         $this->regex .= '(/)?';

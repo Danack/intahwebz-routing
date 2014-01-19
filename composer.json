@@ -6,10 +6,21 @@
         "intahwebz/mb_extra": "dev-master"
     },
 
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*"
-    },
 
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Danack/Auryn"
+        }
+    ],
+
+
+    "require-dev": {
+        "intahwebz/jig": "dev-master",
+        "phpunit/phpunit": "3.7.*",
+        "rdlowrey/auryn": "dev-PluginExperiment2",
+        "zendframework/zend-permissions-acl": ">=2.1.0"
+    },
 
     "autoload": {
         "psr-0": {
@@ -17,5 +28,4 @@
             "Intahwebz\\Routing": "src/"
         }
     }
-
 }
