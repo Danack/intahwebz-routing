@@ -2,13 +2,11 @@
 
 return array(
 
-
 	array(
 		'name' => 'javascriptInclude',
 		'pattern' => '/js/jsInclude/{jsInclude}',
-		'mapping' => array(
-			'BaseReality\\Controller',
-			'ScriptInclude',
+		'callable' => array(
+			'BaseReality\\Controller\\ScriptInclude',
 			'echoJavascriptIncludes',
 		),
 	),
@@ -17,35 +15,33 @@ return array(
 	array(
 		'name' => 'cssInclude',
 		'pattern' => '/css/cssInclude/{cssInclude}',
-		'mapping' => array(
-			'BaseReality\\Controller',
-			'ScriptInclude',
+		'callable' => array(
+			'BaseReality\\Controller\\ScriptInclude',
 			'echoCSSIncludes',
 		),
 	),
 
-
 	array(
 		'name' => 'blogRSSFeed',
 		'pattern' => '/rss/',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'rssFeed'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'rssFeed'
 		),
 	),
 
 	array(
 		'name' => 'blogUpload',
 		'pattern' => '/blog/upload',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'handleUpload'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'handleUpload'
 		),
 	),
 
 	array(
 		'name' => 'blogReplace',
 		'pattern' => '/blog/{blogPostID}/replace/(\.)?',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'handleReplace'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'handleReplace'
 		),
 	),
 
@@ -54,16 +50,16 @@ return array(
 	array(
 		'name' => 'blogUploadForm',
 		'pattern' => '/blogUploadForm',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'uploadForm'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'uploadForm'
 		),
 	),
 
 	array(
 		'name' => 'blogPostEdit',
 		'pattern' => '/{blogPostID}/edit',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'showEdit'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'showEdit'
 		),
 		'requirements' => array(
 			'blogPostID' => '\d+',
@@ -73,8 +69,8 @@ return array(
 	array(
 		'name' => 'blogDraft',
 		'pattern' => '/blog/drafts/{draftFilename}{separator}{format}',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'displayDraft'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'displayDraft'
 		),
 		'requirements' => array(
 			'draftFilename' => '[^\./]+',
@@ -88,8 +84,8 @@ return array(
 	array(
 		'name' => 'blogPost',
 		'pattern' => '/blog/{blogPostID}/{title}{separator}{format}',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'display'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'display'
 		),
 		'requirements' => array(
 			'blogPostID' => '\d+',
@@ -106,49 +102,104 @@ return array(
 	array(
 		'name' => 'blogIndex',
 		'pattern' => '/',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Blog', 'displayIndex'
+		'callable' => array(
+			'BaseReality\\Controller\\Blog', 'displayIndex'
 		),
 	),
 
 	array(
 		'name' => 'formValidator',
 		'pattern' => '/formValidator',
-		'mapping' => array(
-			'BaseReality\\Controller', 'FormValidator', 'display'
+		'callable' => array(
+			'BaseReality\\Controller\\FormValidator', 'display'
 		)
 	),
+
+    array(
+        'name' => 'signupUnavailable',
+        'pattern' => '/signup',
+        'callable' => array(
+            'BaseReality\\Controller\\Signup', 'displayDisabled'
+        ),
+        'requirements' => array(
+//			'offset' => '\d+',
+        ),
+        'requirementCheck' => array(
+            function () {
+                echo "Shamoan mofo";
+                return true;
+            }
+        )
+    ),
 
 	array(
 		'name' => 'signup',
 		'pattern' => '/signup',
-		'mapping' => array(
-			'BaseReality\\Controller', 'Signup', 'display'
+		'callable' => array(
+			'BaseReality\\Controller\\Signup', 'display'
 		),
 		'requirements' => array(
 //			'offset' => '\d+',
 		),
 	),
+
     array(
         'name' => 'StaticFiles',
         'pattern' => '/staticFiles',
-        'mapping' => array(
-            'BaseReality\\Controller\\Management', 'StaticFile', 'display'
+        'callable' => array(
+            'BaseReality\\Controller\\Management\\StaticFile', 'display'
         ),
     ),
 
     array(
         'name' => 'proxyStaticFile',
         'pattern' => '/staticFile/{filename}',
-        'mapping' => array(
-            'BaseReality\\Controller',
-            'ProxyController',
+        'callable' => array(
+            'BaseReality\\Controller\\ProxyController',
             'staticFile',
         ),
         'requirements' => array(
             'filename' => '[^/]+'
         ),
     ),
+    array(
+        'name' => 'image',
+        'pattern' => '/{path}/{imageID}/{size}/{filename}',
+        'callable' => array(
+            'BaseReality\\ImageController',
+            'showImage',
+        ),
+        'requirements' => array(
+            'imageID' => '\d+',
+            'size' => '\w+',
+            'filename' => '[^/]+',
+            'path' => "(image|proxy)",
+        ),
+        'defaults' => array(
+            'path' => 'image',
+            'size' => null
+        ),
+        //This syntax is fucking stupid
+        'optional' => array(
+            'size' => true,
+        )
+    ),
 
+    array(
+        'name' => 'ipRestrict',
+        'pattern' => '/admin/',
+        'callable' => array(
+            'BaseReality\\Controller\\AdminController',
+            'showSecureData',
+        ),
+        'fnCheck' => array(
+            function (\Intahwebz\Request $request) {
+                if ($request->getClientIP() ==  "10.0.2.2") {
+                    return true;
+                }
+                return false;
+            }
+        )
+    ),
 );
 

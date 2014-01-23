@@ -40,12 +40,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
         $blankRequest = new DefinedRequest($requestDefine);
 
-
         $domain = new \Intahwebz\DomainExample($blankRequest, 'basereality.test');
 
         $this->router = new Router($domain,
             $objectCache, 
-            new NullLogger(),
             "RouteUnitTests", 
             dirname(__DIR__)."/Tests/RouteTestData.php"
         );
@@ -55,7 +53,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public function textRoute($expection, Request $request)
+    public function checkRouteValid($expection, Request $request)
     {
         $route = $this->router->getRouteForRequest($request);
 
@@ -64,12 +62,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         }
 
         if (array_key_exists('classMethod', $expection) == true) {
-            $mapping = $route->getMapping();
-            
-            $classMethod = $mapping->getClassPath().'::'.$mapping->getMethodName();
-            $this->assertEquals($expection['classMethod'], $classMethod);
+           $this->assertTrue(false, "This is never meant to be used anymore.");
         }
 
+        if (array_key_exists('callable', $expection) == true) {
+
+//            var_dump($expection['callable']);
+//            var_dump($route->getCallable());
+//            var_dump($route);
+            
+            $this->assertEquals($expection['callable'], $route->getCallable());
+        }
+        
+        
         if (array_key_exists('routeParams', $expection) == true) {
             foreach ($expection['routeParams'] as $routeParam) {
                 $routeParamName = $routeParam[0];
@@ -94,14 +99,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $testDataArray = array(
             [	//simplest test
                 'routeName' => 'blogIndex',
-                'classMethod' => 'BaseReality\\Controller\\Blog::displayIndex',
+                'callable' => ['BaseReality\\Controller\\Blog', 'displayIndex'],
                 'path' => '/',
             ],
 
             [	//Extract variable.
                 'path' => '/blog/5/BlogTitle',
                 'routeName' => 'blogPost',
-                'classMethod' => 'BaseReality\\Controller\\Blog::display',
+                'callable' => ['BaseReality\\Controller\\Blog', 'display'],
                 'routeParams' => [
                     ['blogPostID', 5,],
                     ['title', 'BlogTitle']
@@ -111,7 +116,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
             [	//extract two variables.
                 'path' => '/blog/5/BlogTitle.text',
                 'routeName' => 'blogPost',
-                'classMethod' => 'BaseReality\\Controller\\Blog::display',
+                'callable' => ['BaseReality\\Controller\\Blog', 'display'],
                 'routeParams' => [
                      ['blogPostID', 5,],
                      ['title', 'BlogTitle'],
@@ -122,31 +127,31 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
             [	//Test last slash not present
                 'path' => '/blog/upload',
                 'routeName' => 'blogUpload',
-                'classMethod' => 'BaseReality\\Controller\\Blog::handleUpload',
+                'callable' => ['BaseReality\\Controller\\Blog', 'handleUpload'],
             ],
 
             [	//Test last slash extra still works
                 'path' => '/blog/upload/',
                 'routeName' => 'blogUpload',
-                'classMethod' => 'BaseReality\\Controller\\Blog::handleUpload',
+                'callable' => ['BaseReality\\Controller\\Blog', 'handleUpload'],
             ],
 
             [	//Test last slash present as per route
                 'path' => '/rss/',
                 'routeName' => 'blogRSSFeed',
-                'classMethod' => 'BaseReality\\Controller\\Blog::rssFeed',
+                'callable' => ['BaseReality\\Controller\\Blog', 'rssFeed'],
             ],
 
             [	//Test last slash optional
                 'path' => '/rss',
                 'routeName' => 'blogRSSFeed',
-                'classMethod' => 'BaseReality\\Controller\\Blog::rssFeed',
+                'callable' => ['BaseReality\\Controller\\Blog', 'rssFeed'],
             ],
 
             [
                 'path' => '/staticFile/someFile.gz',
                 'routeName' => 'proxyStaticFile',
-                'classMethod' => 'BaseReality\\Controller\\ProxyController::staticFile',
+                'callable' => ['BaseReality\\Controller\\ProxyController', 'staticFile'],
                 'routeParams' => [
                     ['filename', 'someFile.gz'],
                 ]
@@ -154,20 +159,46 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
             [
                 'path' => '/staticFiles',
                 'routeName' => 'StaticFiles',
-                'classMethod' => 'BaseReality\\Controller\\Management\\StaticFile::display',
+                'callable' => ['BaseReality\\Controller\\Management\\StaticFile', 'display'],
             ],
+            [
+                'path' => '/image/1234/256/someImage.jpg',
+                'routeName' => 'image',
+                //'classMethod' => 'BaseReality\\Controller\\Management\\StaticFile::display',
+                'callable' => ['BaseReality\\ImageController', 'showImage'],
+                'routeParams' => [
+                    ['imageID', 1234,],
+                    ['size', 256],
+                    ['filename', 'someImage.jpg'],
+                    ['path', 'image']
+                ]
+            ],
+            [
+                'path' => '/image/1234/someImage.jpg',
+                'routeName' => 'image',
+                //'classMethod' => 'BaseReality\\Controller\\Management\\StaticFile::display',
+                'callable' => ['BaseReality\\ImageController', 'showImage'],
+                'routeParams' => [
+                    ['imageID', 1234,],
+                    ['size', null],
+                    ['filename', 'someImage.jpg'],
+                    ['path', 'image']
+                ]
+            ],
+         
+
+
         );
 
         foreach ($testDataArray as $testData) {
             $request = clone $blankRequest;
             $request->setPath($testData['path']);
-
-            $this->textRoute($testData, $request);
+            $this->checkRouteValid($testData, $request);
         }
     }
 
     public function testException() {
-        $this->setExpectedException(\Intahwebz\Routing\RouteMissingException::class);
+        $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
         $requestDefine = $this->standardRequestDefine;
         $requestDefine['path'] = '/ThisDoesntExist';
         $blankRequest = new DefinedRequest($requestDefine);
@@ -191,7 +222,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGenerateURLForUnknownRoute() {
-        $this->setExpectedException(\Intahwebz\Exception\UnsupportedOperationException::class);
+        $this->setExpectedException('\Intahwebz\Exception\UnsupportedOperationException');
         $this->router->generateURLForRoute('AnUnknownRoute', []);
     }
 
@@ -201,12 +232,38 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetRouteMissingException() {
-        $this->setExpectedException(\Intahwebz\Routing\RouteMissingException::class);
+        $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
         $route = $this->router->getRoute('nonExistantRoute');
         $this->assertNull($route, "Failed to not find non-existent route.");
     }
 
 
+    public function testIPAccess() {
+
+        $requestDefine = array(
+            'hostName' => 'test.local',
+            'scheme' => 'http',
+            'requestParams' => array(),
+            'port' => 80,
+            'method' => 'GET',
+            'path' => '/admin/'
+            
+        );
+
+        $allowedRequest = new DefinedRequest(array_merge($requestDefine, ['clientIP' =>"10.0.2.2"]));
+        $deniedRequest = new DefinedRequest(array_merge($requestDefine, ['clientIP' =>"8.8.8.8"]));
+
+        $route = $this->router->getRouteForRequest($allowedRequest);
+        
+        $this->assertEquals($route->getName(), 'ipRestrict');
+
+        $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
+        $this->router->getRouteForRequest($deniedRequest);
+
+    }
+    
+    
+    
 }
 
 

@@ -4,7 +4,7 @@ namespace Intahwebz\Routing;
 
 
 
-class RouteVariable{
+class RouteVariable {
 
     public $name;
 
@@ -12,17 +12,23 @@ class RouteVariable{
 
     public $default = NULL;
 
-    public function __construct($name){
-        $this->name = $name;
-    }
+    private $optional = false;
 
-    function setRequirement($requirement) {
+    public function __construct($name, $nameWithWrapping, $default, $requirement, $optional){
+        $this->name = $name;
+        $this->optional = $optional;
+        // $nameWithWrapping - unused?
+        $this->default = $default;
         $this->requirement = $requirement;
     }
 
-    function  setDefault($default) {
-        $this->default = $default;
-    }
+//    function setRequirement($requirement) {
+//        $this->requirement = $requirement;
+//    }
+//
+//    function  setDefault($default) {
+//        $this->default = $default;
+//    }
 
     /**
      * Converts requirements for variables into perl style regexes.
@@ -37,13 +43,11 @@ class RouteVariable{
             $regex = "(?<".$this->name.">[^/]+)";
         }
 
-        //TODO - how do you set a default value of NULL
-        if($this->default === NULL){
-            return $regex;
+        if ($this->optional == true || $this->default !== null) {
+            $regex .= "?";
         }
-        else{
-            return $regex."?";
-        }
+
+        return $regex;
     }
 }
 

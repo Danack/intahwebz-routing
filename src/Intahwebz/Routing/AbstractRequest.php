@@ -32,7 +32,7 @@ abstract class AbstractRequest implements Request {
         'cookie',	// from COOKIE //TODO remove - cookies are storage?
     );
 
-    function getHostName(){
+    function getHostName() {
         return $this->hostName;
     }
 
@@ -40,26 +40,30 @@ abstract class AbstractRequest implements Request {
         $this->routeParameters = array_merge($this->routeParameters, $routeParameters);
     }
 
-    function getScheme(){
+    function getScheme() {
         return $this->scheme;
     }
 
-    function getRequestParams(){
+    function getRequestParams() {
         return $this->requestParams;
     }
 
-    function getPath(){
+    function getPath() {
         return $this->path;
     }
 
-    function getPort(){
+    function getPort() {
         return $this->port;
     }
 
-    function getMethod(){
+    function getMethod() {
         return $this->method;
     }
 
+    function getClientIP() {
+        return $this->clientIP;
+    }
+    
     /**
      * Priority = global request cookie session
      *
