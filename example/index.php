@@ -23,8 +23,6 @@ use Intahwebz\Routing\Example\Security\LoginRequiredException;
 use Intahwebz\Jig\JigConfig;
 use Intahwebz\Routing\RouteMissingException;
 
-//use Intahwebz\Routing\Example\ViewModel\ExampleViewModel;
-
 $contentView = [Resource::CONTENT, Privilege::VIEW];
 
 $adminView = [Resource::ADMIN, Privilege::VIEW];

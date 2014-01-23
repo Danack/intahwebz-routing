@@ -238,6 +238,32 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    public function testIPAccess() {
+
+        $requestDefine = array(
+            'hostName' => 'test.local',
+            'scheme' => 'http',
+            'requestParams' => array(),
+            'port' => 80,
+            'method' => 'GET',
+            'path' => '/admin/'
+            
+        );
+
+        $allowedRequest = new DefinedRequest(array_merge($requestDefine, ['clientIP' =>"10.0.2.2"]));
+        $deniedRequest = new DefinedRequest(array_merge($requestDefine, ['clientIP' =>"8.8.8.8"]));
+
+        $route = $this->router->getRouteForRequest($allowedRequest);
+        
+        $this->assertEquals($route->getName(), 'ipRestrict');
+
+        $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
+        $this->router->getRouteForRequest($deniedRequest);
+
+    }
+    
+    
+    
 }
 
 

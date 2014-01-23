@@ -2,7 +2,6 @@
 
 return array(
 
-
 	array(
 		'name' => 'javascriptInclude',
 		'pattern' => '/js/jsInclude/{jsInclude}',
@@ -21,7 +20,6 @@ return array(
 			'echoCSSIncludes',
 		),
 	),
-
 
 	array(
 		'name' => 'blogRSSFeed',
@@ -117,6 +115,23 @@ return array(
 		)
 	),
 
+    array(
+        'name' => 'signupUnavailable',
+        'pattern' => '/signup',
+        'callable' => array(
+            'BaseReality\\Controller\\Signup', 'displayDisabled'
+        ),
+        'requirements' => array(
+//			'offset' => '\d+',
+        ),
+        'requirementCheck' => array(
+            function () {
+                echo "Shamoan mofo";
+                return true;
+            }
+        )
+    ),
+
 	array(
 		'name' => 'signup',
 		'pattern' => '/signup',
@@ -127,6 +142,7 @@ return array(
 //			'offset' => '\d+',
 		),
 	),
+
     array(
         'name' => 'StaticFiles',
         'pattern' => '/staticFiles',
@@ -169,5 +185,21 @@ return array(
         )
     ),
 
+    array(
+        'name' => 'ipRestrict',
+        'pattern' => '/admin/',
+        'callable' => array(
+            'BaseReality\\Controller\\AdminController',
+            'showSecureData',
+        ),
+        'fnCheck' => array(
+            function (\Intahwebz\Request $request) {
+                if ($request->getClientIP() ==  "10.0.2.2") {
+                    return true;
+                }
+                return false;
+            }
+        )
+    ),
 );
 

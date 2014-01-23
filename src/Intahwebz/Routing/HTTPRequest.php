@@ -140,5 +140,10 @@ class HTTPRequest extends AbstractRequest {
         }
         return null;
     }
+
+    function getClientIP() {
+        return $this->clientIP;
+    }
+    
 }
 

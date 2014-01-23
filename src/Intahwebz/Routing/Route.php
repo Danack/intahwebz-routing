@@ -7,39 +7,32 @@ use Intahwebz\Request;
 use Intahwebz\Exception\UnsupportedOperationException;
 
 
-//function multiReplace($pattern, $replace, $string) {
-//
-//    while($position = strrpos($string, $pattern)) {
-//        $before = substr($string, 0, $position);
-//        $after = substr($string, $position);
-//        $string = $before.str_replace($pattern, $replace, $after);
-//    }
-//
-//    return $string;
-//}
-
 
 class Route implements \Intahwebz\Route{
 
     use \Intahwebz\SafeAccess;
 
-    public	$name;				// "pictures"
+    public $name;				// "pictures"
 
-    public 	$pattern;			// "/pictures/{page}/{debugVar}",
+    public $pattern;			// "/pictures/{page}/{debugVar}",
 
-    public	$regex;				// "#^/pictures/(?\d+)(?:/(?[^/]+))?$#s",
+    public $regex;				// "#^/pictures/(?\d+)(?:/(?[^/]+))?$#s",
 
-    public	$staticPrefix;		// "/pictures",
+    public $staticPrefix;		// "/pictures",
 
-    public	$methodRequirement = null;
+    public $methodRequirement = null;
 
-    public  $defaults = array();
+    public $defaults = array();
 
-    public  $resourceName = null;
+    public $resourceName = null;
 
-    public  $privilegeName = null;
+    public $privilegeName = null;
+
+    public $fnCheck = array();
 
     private $template = null;
+
+    private $requirementChecks = array();
 
     /**
      * The parameters extracted from a request.
@@ -78,7 +71,6 @@ class Route implements \Intahwebz\Route{
         return $this->callable;
     }
 
-
     function getName() {
         return $this->name;
     }
@@ -112,6 +104,10 @@ class Route implements \Intahwebz\Route{
 
         if (array_key_exists('callable', $routeInfo) == true) {
             $this->callable = $routeInfo['callable'];
+        }
+
+        if (array_key_exists('fnCheck', $routeInfo) == true) {
+            $this->fnCheck = $routeInfo['fnCheck'];
         }
 
         $firstBracketPosition = mb_strpos($this->pattern, '{');
@@ -260,6 +256,23 @@ class Route implements \Intahwebz\Route{
             return false;
         }
 
+        foreach ($this->requirementChecks as $requirementCheck) {
+            $result = $requirementCheck();
+            
+            if (!$result) {
+                return false;
+            }
+        }
+        
+        foreach ($this->fnCheck as $fnCheck) {
+            $result = $fnCheck($request);
+            if (!$result) {
+                return false;
+            }
+        }
+
+        //Route has matched
+        
         $params = array();
 
         foreach($this->variables as $routeVariable){
@@ -315,7 +328,7 @@ class Route implements \Intahwebz\Route{
 
         $arguments = array();
 
-        $mergedParameters = $this-getMergedParameters();
+        $mergedParameters = $this->getMergedParameters();
 
         foreach ($parameters as $param) {
             //If we have it as a parameter from the route/request
