@@ -4,7 +4,6 @@
 namespace Intahwebz\Tests\Routing;
 
 use Intahwebz\Cache\NullObjectCache;
-use Intahwebz\Logger\NullLogger;
 
 use Intahwebz\Request;
 use Intahwebz\Routing\Router;
@@ -55,7 +54,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
     public function checkRouteValid($expection, Request $request)
     {
-        $route = $this->router->getRouteForRequest($request);
+        $matchedRoute = $this->router->matchRouteForRequest($request);
+
+        $route = $matchedRoute->getRoute();
 
         if (array_key_exists('routeName', $expection) == true) {
             $this->assertEquals($expection['routeName'], $route->getName());
@@ -66,20 +67,25 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         }
 
         if (array_key_exists('callable', $expection) == true) {
-
-//            var_dump($expection['callable']);
-//            var_dump($route->getCallable());
-//            var_dump($route);
-            
             $this->assertEquals($expection['callable'], $route->getCallable());
         }
-        
-        
+
         if (array_key_exists('routeParams', $expection) == true) {
             foreach ($expection['routeParams'] as $routeParam) {
                 $routeParamName = $routeParam[0];
                 $routeParamValue = $routeParam[1];
-                $this->assertEquals($routeParamValue, $route->getRouteParam($routeParamName), "Route param doesn't match expected value:");
+                
+                $mergedParams = $matchedRoute->getMergedParameters($request, []);
+
+                $matchedRoute->getParams();
+                
+                $this->assertArrayHasKey($routeParamName, $mergedParams);
+
+                $this->assertEquals(
+                    $routeParamValue, 
+                    $mergedParams[$routeParamName], 
+                    "Route param doesn't match expected value:"
+                );
             }
         }
     }
@@ -185,9 +191,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                     ['path', 'image']
                 ]
             ],
-         
-
-
         );
 
         foreach ($testDataArray as $testData) {
@@ -202,7 +205,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $requestDefine = $this->standardRequestDefine;
         $requestDefine['path'] = '/ThisDoesntExist';
         $blankRequest = new DefinedRequest($requestDefine);
-        $this->router->getRouteForRequest($blankRequest);
+        $this->router->matchRouteForRequest($blankRequest);
         $this->fail('An expected exception has not been raised.');
     }
 
@@ -253,12 +256,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $allowedRequest = new DefinedRequest(array_merge($requestDefine, ['clientIP' =>"10.0.2.2"]));
         $deniedRequest = new DefinedRequest(array_merge($requestDefine, ['clientIP' =>"8.8.8.8"]));
 
-        $route = $this->router->getRouteForRequest($allowedRequest);
+        $matchedRoute = $this->router->matchRouteForRequest($allowedRequest);
+        
+        $route = $matchedRoute->getRoute();
         
         $this->assertEquals($route->getName(), 'ipRestrict');
 
         $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
-        $this->router->getRouteForRequest($deniedRequest);
+        $this->router->matchRouteForRequest($deniedRequest);
 
     }
     

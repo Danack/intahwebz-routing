@@ -2,13 +2,12 @@
 
 namespace Intahwebz\Routing;
 
-use Psr\Log\LoggerInterface;
-
 use Intahwebz\ObjectCache;
 use Intahwebz\Exception\UnsupportedOperationException;
 use Intahwebz\Routable;
 use Intahwebz\Route;
 use Intahwebz\Request;
+use Intahwebz\MatchedRoute;
 
 class Router implements \Intahwebz\Router {
 
@@ -30,11 +29,9 @@ class Router implements \Intahwebz\Router {
      */
     var $objectCache;
 
-
     var $domain;
 
-
-    function	__construct(
+    function __construct(
         \Intahwebz\Domain $domain,
         ObjectCache $objectCache,
         $routeCollectionName,
@@ -88,16 +85,16 @@ class Router implements \Intahwebz\Router {
      * Find the most appropriate route, and route the request to it.
      *
      * @param $request
-     * @return Route
+     * @return MatchedRoute
      * @throws RouteMissingException
      */
-    function getRouteForRequest(Request $request){
+    function matchRouteForRequest(Request $request){
         /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($this->routesByName as $name => $route) {
-            $params = $route->matchRequestAndStoreParams($request);
+            $params = $route->matchRequest($request);
 
             if($params !== false){
-                return [$route, $params];
+                return new MatchedRoute($request, $route, $params);
             }
         }
 

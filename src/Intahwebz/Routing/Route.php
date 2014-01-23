@@ -64,6 +64,10 @@ class Route implements \Intahwebz\Route{
         return $this->routeParams;
     }
 
+    public function getDefaults() {
+        return $this->defaults;
+    }
+    
     /**
      * @return callable
      */
@@ -237,7 +241,7 @@ class Route implements \Intahwebz\Route{
      * @return array|bool
      */
 
-    function matchRequestAndStoreParams(Request $request) {
+    function matchRequest(Request $request) {
         $requestPath = $request->getPath();
 
         if (mb_strpos($requestPath, $this->staticPrefix) !== 0) {
@@ -295,17 +299,20 @@ class Route implements \Intahwebz\Route{
         return $params;
     }
 
-
-    function getMergedParameters(Request $request, $params) {
-        //later value for that key will overwrite the previous one, so higher priority values come later
-        $mergedParameters = array();
-        $mergedParameters = array_merge($mergedParameters, $this->defaults);
-        //$mergedParameters = array_merge($mergedParameters, $this->routeParams);
-        $mergedParameters = array_merge($mergedParameters, $params);
-        $mergedParameters = array_merge($mergedParameters, $request->getRequestParams());
-
-        return $mergedParameters;
+    function getDefaultParams() {
+        return $this->defaults;
     }
+
+//    function getMergedParameters(Request $request, $params) {
+//        //later value for that key will overwrite the previous one, so higher priority values come later
+//        $mergedParameters = array();
+//        $mergedParameters = array_merge($mergedParameters, $this->defaults);
+//        //$mergedParameters = array_merge($mergedParameters, $this->routeParams);
+//        $mergedParameters = array_merge($mergedParameters, $params);
+//        $mergedParameters = array_merge($mergedParameters, $request->getRequestParams());
+//
+//        return $mergedParameters;
+//    }
 
 
     /**
@@ -313,11 +320,9 @@ class Route implements \Intahwebz\Route{
      * and request.
      *
      * TODO - delete this? It's redundant and slightly shite.
-     *
-     * @param Request $request
-     * @throws \RuntimeException
-     * @return array
-     */
+  
+     * not deleting permanently yet, however it's even more redundant with Auryn.
+
     function mapParametersToFunctionArguments(Request $request) {
 
         $classPath = $this->callable[0];
@@ -329,7 +334,7 @@ class Route implements \Intahwebz\Route{
 
         $arguments = array();
 
-        $mergedParameters = $this->getMergedParameters();
+        $mergedParameters = $this->getMergedParameters($request);
 
         foreach ($parameters as $param) {
             //If we have it as a parameter from the route/request
@@ -350,7 +355,8 @@ class Route implements \Intahwebz\Route{
         }
 
         return $arguments;
-    }
+    } 
+    */
 
 
     private function getRequiredPathComponents($params) {

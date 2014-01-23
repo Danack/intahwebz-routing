@@ -80,10 +80,11 @@ class HTTPResponse implements \Intahwebz\Response {
 //		return;
 //	}
 
+        //TODO - this is bollocks.
         if($secureOnly == true){
-            if(isHTTPSPage() == false){
+            //if(isHTTPSPage() == false){
                 throw new \Exception("Setting Cookie [$cookieName] which is meant to be a secure cookie.");
-            }
+            //}
         }
 
         $domainToSet = $this->domain->getDomainInfo()->rootCanonicalDomain;

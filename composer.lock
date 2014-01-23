@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Danack/intahwebz-core.git",
-                "reference": "f29b0e5cf852d7f4a6dd76aac654d29c238d4218"
+                "reference": "f72605fddfaa15da8d51e0141087de404ab63848"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/f29b0e5cf852d7f4a6dd76aac654d29c238d4218",
-                "reference": "f29b0e5cf852d7f4a6dd76aac654d29c238d4218",
+                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/f72605fddfaa15da8d51e0141087de404ab63848",
+                "reference": "f72605fddfaa15da8d51e0141087de404ab63848",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "intahwebz",
                 "library"
             ],
-            "time": "2014-01-15 15:03:36"
+            "time": "2014-01-23 23:34:51"
         },
         {
             "name": "intahwebz/mb_extra",
