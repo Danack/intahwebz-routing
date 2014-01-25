@@ -124,9 +124,8 @@ return array(
         'requirements' => array(
 //			'offset' => '\d+',
         ),
-        'requirementCheck' => array(
+        'fnCheck' => array(
             function () {
-                echo "Shamoan mofo";
                 return true;
             }
         )

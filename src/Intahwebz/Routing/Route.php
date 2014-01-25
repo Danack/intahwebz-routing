@@ -8,61 +8,38 @@ use Intahwebz\Exception\UnsupportedOperationException;
 
 
 
-class Route implements \Intahwebz\Route{
+class Route implements \Intahwebz\Route {
 
     use \Intahwebz\SafeAccess;
 
-    public $name;				// "pictures"
+    private $name;				// "pictures"
 
-    public $pattern;			// "/pictures/{page}/{debugVar}",
+    private $pattern;			// "/pictures/{page}/{debugVar}",
 
-    public $regex;				// "#^/pictures/(?\d+)(?:/(?[^/]+))?$#s",
+    private $regex;				// "#^/pictures/(?\d+)(?:/(?[^/]+))?$#s",
 
-    public $staticPrefix;		// "/pictures",
+    private $staticPrefix;		// "/pictures",
 
-    public $methodRequirement = null;
+    private $methodRequirement = null;
 
-    public $defaults = array();
+    private $defaults = array();
 
-    public $resourceName = null;
+    private $optionalInfo = array();
 
-    public $privilegeName = null;
+    private $fnCheck = array();
 
-    public $fnCheck = array();
+    private $extra = array();
 
-    private $template = null;
-
-    private $requirementChecks = array();
 
     /**
-     * The parameters extracted from a request.
-     * @var array
-     */
-    public	$routeParams = array();
-
-    /**
-     * @var  $variables RouteVariable[]
+     * @var $variables RouteVariable[]
      */
     public $variables = array();
 
     /** @var callable */
     public $callable;
 
-    public function getACLResourceName() {
-        return $this->resourceName;
-    }
-
-    public function getTemplate() {
-        return $this->template;
-    }
-
-    public function getACLPrivilegeName() {
-        return $this->privilegeName;
-    }
-
-    public function getRouteParams() {
-        return $this->routeParams;
-    }
+    private $requirements = array();
 
     public function getDefaults() {
         return $this->defaults;
@@ -79,13 +56,6 @@ class Route implements \Intahwebz\Route{
         return $this->name;
     }
 
-//    public function getRouteParam($routeParamName) {
-//        if (array_key_exists($routeParamName, $this->routeParams)) {
-//            return $this->routeParams[$routeParamName];
-//        }
-//        return null;
-//    }
-
     /**
      * Makes a route out of an array of config data.
      *
@@ -95,25 +65,80 @@ class Route implements \Intahwebz\Route{
         $this->name = $routeInfo['name'];
         $this->pattern = $routeInfo['pattern'];
 
-        if (array_key_exists('access', $routeInfo)) {
-            $this->resourceName = $routeInfo['access'][0];
-            if (isset($routeInfo['access'][1]) == true) {
-                $this->privilegeName = $routeInfo['access'][1];
+        
+        foreach ($routeInfo as $key => $value) {
+         
+            switch($key) {
+
+                case('access') :{
+                    $this->resourceName = $routeInfo['access'][0];
+                    if (isset($routeInfo['access'][1]) == true) {
+                        $this->privilegeName = $routeInfo['access'][1];
+                    }
+                    break;
+                }
+                
+                case ('requirements'): {
+                    $this->requirements = $value;
+                    break;
+                }
+                case ('_method'): {
+                    $this->methodRequirement = $value;
+                    break;
+                }
+                case ('defaults'): {
+                    $this->defaults = $value;
+                    break;
+                }
+                case ('callable'): {
+                    $this->callable = $routeInfo['callable'];
+                    break;
+                }
+                case ('fnCheck'): {
+                    $this->fnCheck = $routeInfo['fnCheck'];
+                    break;
+                }
+
+                case('name'):
+                case('pattern'):{ break;}
+                    
+                case('optional'): {
+                    $this->optionalInfo = $routeInfo['optional'];
+                    break;
+                }
+
+                default:{
+                    $this->extra[$key] = $value;
+                    break;
+                }
             }
         }
 
-        if (array_key_exists('template', $routeInfo) == true) {
-            $this->template = $routeInfo['template'];
+        $this->calculateStaticPrefix();
+
+        //For paths other than the route path '/' allow the last '/' to be optional
+        //If the string terminates there.
+        if(mb_strlen($this->staticPrefix) > 1) {
+            if(mb_substr($this->staticPrefix, mb_strlen($this->staticPrefix)-1) == '/'){
+                $this->staticPrefix = mb_substr($this->staticPrefix, 0, mb_strlen($this->staticPrefix)-1);
+            }
+
+            if(mb_substr($this->pattern, mb_strlen($this->pattern)-1) == '/'){
+                $this->pattern = mb_substr($this->pattern, 0, mb_strlen($this->pattern)-1);
+            }
         }
 
-        if (array_key_exists('callable', $routeInfo) == true) {
-            $this->callable = $routeInfo['callable'];
+        $this->buildRegex();
+    }
+    
+    function get($key) {
+        if (array_key_exists($key, $this->extra) == true) {
+            return $this->extra[$key];
         }
+        return null;
+    }
 
-        if (array_key_exists('fnCheck', $routeInfo) == true) {
-            $this->fnCheck = $routeInfo['fnCheck'];
-        }
-
+    function calculateStaticPrefix() {
         $firstBracketPosition = mb_strpos($this->pattern, '{');
         if($firstBracketPosition === false){
             //No variables
@@ -122,32 +147,9 @@ class Route implements \Intahwebz\Route{
         else{
             $this->staticPrefix = mb_substr($this->pattern, 0, $firstBracketPosition);
         }
+    }
 
-        //For paths other than the route path '/' allow the last '/' to be optional
-        //If the string terminates there.
-        if(mb_strlen($this->staticPrefix) > 1){
-            if(mb_substr($this->staticPrefix, mb_strlen($this->staticPrefix)-1)   == '/'){
-                $this->staticPrefix = mb_substr($this->staticPrefix, 0, mb_strlen($this->staticPrefix)-1);
-            }
-
-            if(mb_substr($this->pattern, mb_strlen($this->pattern)-1)   == '/'){
-                $this->pattern = mb_substr($this->pattern, 0, mb_strlen($this->pattern)-1);
-            }
-        }
-
-        $requirements = array();
-        if(array_key_exists('requirements', $routeInfo) == true){
-            $requirements = $routeInfo['requirements'];
-        }
-
-        if(array_key_exists('_method', $requirements) == true){
-            $this->methodRequirement = $requirements['_method'];
-        }
-
-        if(array_key_exists('defaults', $routeInfo) == true){
-            $this->defaults = $routeInfo['defaults'];
-        }
-
+    function buildRegex() {
         $matches = array();
 
         // We need the position of the matches to allow us to rebuild the pattern string
@@ -166,49 +168,37 @@ class Route implements \Intahwebz\Route{
 
             if($currentPosition < $variableNameWithWrappingPosition){
                 $nextPart = mb_substr($this->pattern, $currentPosition, $variableNameWithWrappingPosition - $currentPosition);
-
-                //  - /images/2 or /images/ or /images
-
-//                if(mb_substr($nextPart, mb_strlen($nextPart)-1)   == '/'){
-//                    //$nextPart = mb_substr($nextPart, 0, mb_strlen($nextPart)-1) ."(?:/)?";
-//                    $nextPart = mb_substr($nextPart, 0, mb_strlen($nextPart)-1) ."(?:/|$)";
-//                }
-
                 $this->regex .= $nextPart;
             }
 
             $optional = false;
-            if(array_key_exists('optional', $routeInfo) == true){
-                if (array_key_exists($variableName, $routeInfo['optional']) == true) {
-                    //$routerVariable->setDefault($this->defaults[$variableName]);
-                    $optional = $routeInfo['optional'][$variableName];
-                }
-            }
             
+            if (array_key_exists($variableName, $this->optionalInfo) == true) {
+                $optional = $this->optionalInfo[$variableName];
+            }
+
             $default = null;
             if(array_key_exists($variableName, $this->defaults) == true){
-                //$routerVariable->setDefault($this->defaults[$variableName]);
                 $default = $this->defaults[$variableName];
             }
 
             $requirement = null;
-            if(array_key_exists($variableName, $requirements) == true){
-                //$routerVariable->setRequirement($requirements[$variableName]);
-                $requirement = $requirements[$variableName];
+            if(array_key_exists($variableName, $this->requirements) == true){
+                $requirement = $this->requirements[$variableName];
             }
 
             $routerVariable = new RouteVariable(
-                $variableName, 
-                $variableNameWithWrapping, 
-                $default, 
+                $variableName,
+                $variableNameWithWrapping,
+                $default,
                 $requirement,
                 $optional
             );
-            
-            if ($optional) {    
-                $lastPos = strlen($this->regex) -1;
+
+            if ($optional) {
+                $lastPos = strlen($this->regex) - 1;
                 $lastSlash = strrpos($this->regex, '/');
-                
+
                 if ($lastSlash == $lastPos) {
                     $this->regex = substr($this->regex, 0, -1)."(?:/)?";
                 }
@@ -222,8 +212,6 @@ class Route implements \Intahwebz\Route{
 
         $this->regex .= mb_substr($this->pattern, $currentPosition);
 
-//        $this->regex = multiReplace('//', '/(?:/)?', $this->regex);
-
         //let there be an optional last slash
         $this->regex .= '(/)?';
 
@@ -231,7 +219,6 @@ class Route implements \Intahwebz\Route{
 
         $this->regex = $REGEX_DELIMITER.'^'.$this->regex.'$'.$REGEX_DELIMITER;
     }
-
 
     /**
      * Test that a request meets the path and other requirements for a route.
@@ -260,14 +247,6 @@ class Route implements \Intahwebz\Route{
             return false;
         }
 
-        foreach ($this->requirementChecks as $requirementCheck) {
-            $result = $requirementCheck();
-            
-            if (!$result) {
-                return false;
-            }
-        }
-        
         foreach ($this->fnCheck as $fnCheck) {
             $result = $fnCheck($request);
             if (!$result) {
@@ -276,7 +255,6 @@ class Route implements \Intahwebz\Route{
         }
 
         //Route has matched
-        
         $params = array();
 
         foreach($this->variables as $routeVariable){
@@ -286,15 +264,7 @@ class Route implements \Intahwebz\Route{
             else if($routeVariable->default != null){
                 $params[$routeVariable->name] = $routeVariable->default;
             }
-
-            //TODO replace this with the preg_match on the whole route.
-//			if ($routeVariable->matchesRequirement($params[$routeVariable->name]) == false) {
-//				return false;
-//			}
         }
-
-        //TODO this is bad state
-        //$this->routeParams = $params;
 
         return $params;
     }
@@ -302,62 +272,6 @@ class Route implements \Intahwebz\Route{
     function getDefaultParams() {
         return $this->defaults;
     }
-
-//    function getMergedParameters(Request $request, $params) {
-//        //later value for that key will overwrite the previous one, so higher priority values come later
-//        $mergedParameters = array();
-//        $mergedParameters = array_merge($mergedParameters, $this->defaults);
-//        //$mergedParameters = array_merge($mergedParameters, $this->routeParams);
-//        $mergedParameters = array_merge($mergedParameters, $params);
-//        $mergedParameters = array_merge($mergedParameters, $request->getRequestParams());
-//
-//        return $mergedParameters;
-//    }
-
-
-    /**
-     * Generate a list of arguments to be passed to a controller, from the route
-     * and request.
-     *
-     * TODO - delete this? It's redundant and slightly shite.
-  
-     * not deleting permanently yet, however it's even more redundant with Auryn.
-
-    function mapParametersToFunctionArguments(Request $request) {
-
-        $classPath = $this->callable[0];
-        $methodName = $this->callable[1];
-
-        $reflector = new \ReflectionMethod($classPath, $methodName);
-
-        $parameters = $reflector->getParameters();
-
-        $arguments = array();
-
-        $mergedParameters = $this->getMergedParameters($request);
-
-        foreach ($parameters as $param) {
-            //If we have it as a parameter from the route/request
-            if(array_key_exists($param->name, $mergedParameters) == true){
-                $arguments[] = $mergedParameters[$param->name];
-            }
-            //If function wants request, pass it in
-            elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
-                $arguments[] = $request;
-            }
-            //If default available, set it
-            elseif ($param->isDefaultValueAvailable()) {
-                $arguments[] = $param->getDefaultValue();
-            }
-            else {
-                throw new \RuntimeException("Controller [".$classPath."], method [".$methodName."] requires that you provide a value for the [".$param->name."] argument (because there is no default value or because there is a non optional argument after this one).");
-            }
-        }
-
-        return $arguments;
-    } 
-    */
-
 
     private function getRequiredPathComponents($params) {
 
