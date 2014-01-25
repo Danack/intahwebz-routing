@@ -69,15 +69,6 @@ class Route implements \Intahwebz\Route {
         foreach ($routeInfo as $key => $value) {
          
             switch($key) {
-
-                case('access') :{
-                    $this->resourceName = $routeInfo['access'][0];
-                    if (isset($routeInfo['access'][1]) == true) {
-                        $this->privilegeName = $routeInfo['access'][1];
-                    }
-                    break;
-                }
-                
                 case ('requirements'): {
                     $this->requirements = $value;
                     break;
@@ -94,15 +85,14 @@ class Route implements \Intahwebz\Route {
                     $this->fnCheck = $routeInfo['fnCheck'];
                     break;
                 }
-
                 case('name'):
-                case('pattern'):{ break;}
-                    
+                case('pattern'):{ 
+                    break;
+                }
                 case('optional'): {
                     $this->optionalInfo = $routeInfo['optional'];
                     break;
                 }
-
                 default:{
                     $this->extra[$key] = $value;
                     break;
@@ -155,9 +145,9 @@ class Route implements \Intahwebz\Route {
         $currentPosition = 0;
         $this->regex = '';
 
-        if ($this->name == 'image' || $this->name == 'pictures') {
-            echo "bar";
-        }
+//        if ($this->name == 'image' || $this->name == 'pictures') {
+//            echo "bar";
+//        }
         
         $matchCount = 0;
 

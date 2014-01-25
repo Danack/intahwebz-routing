@@ -57,10 +57,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $matchedRoute = $this->router->matchRouteForRequest($request);
 
         $route = $matchedRoute->getRoute();
-        
-        if ($route->getName() == 'image') {
-            echo "foo";
-        }
 
         $this->assertNotNull($route, "Failed to match route.");
 
