@@ -178,12 +178,29 @@ return array(
             'path' => 'image',
             'size' => null
         ),
-        //This syntax is fucking stupid
+        //TODO - This syntax is fucking stupid
         'optional' => array(
             'size' => true,
         )
     ),
 
+
+    array(
+        'name' => 'pictures',
+        'pattern' => '/pictures/{page}',
+        'callable' => array(
+            'ImageClass',
+            'show',
+        ),
+        'defaults' => array(
+            'page' => '1',
+        ),
+        'requirements' => array(
+            'page' => '\d+',
+        ),
+        //'access' => $contentView,
+    ),
+    
     array(
         'name' => 'ipRestrict',
         'pattern' => '/admin/',

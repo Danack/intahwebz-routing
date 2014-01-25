@@ -57,6 +57,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $matchedRoute = $this->router->matchRouteForRequest($request);
 
         $route = $matchedRoute->getRoute();
+        
+        if ($route->getName() == 'image') {
+            echo "foo";
+        }
+
+        $this->assertNotNull($route, "Failed to match route.");
 
         if (array_key_exists('routeName', $expection) == true) {
             $this->assertEquals($expection['routeName'], $route->getName());
@@ -67,7 +73,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         }
 
         if (array_key_exists('callable', $expection) == true) {
-            $this->assertEquals($expection['callable'], $route->getCallable());
+            $this->assertEquals($expection['callable'], $route->get('callable'));
         }
 
         if (array_key_exists('routeParams', $expection) == true) {
@@ -75,10 +81,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 $routeParamName = $routeParam[0];
                 $routeParamValue = $routeParam[1];
                 
-                $mergedParams = $matchedRoute->getMergedParameters($request, []);
+                $mergedParams = $matchedRoute->getMergedParameters();
 
-                $matchedRoute->getParams();
-                
+                //$matchedRoute->getParams();
+
                 $this->assertArrayHasKey($routeParamName, $mergedParams);
 
                 $this->assertEquals(
@@ -190,6 +196,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                     ['filename', 'someImage.jpg'],
                     ['path', 'image']
                 ]
+            ],
+            [	//Test last slash optional
+                'path' => '/pictures',
+                'routeName' => 'pictures',
+                'callable' => array('ImageClass', 'show', ),
             ],
         );
 

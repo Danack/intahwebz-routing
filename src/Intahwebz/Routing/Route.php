@@ -90,10 +90,6 @@ class Route implements \Intahwebz\Route {
                     $this->defaults = $value;
                     break;
                 }
-                case ('callable'): {
-                    $this->callable = $routeInfo['callable'];
-                    break;
-                }
                 case ('fnCheck'): {
                     $this->fnCheck = $routeInfo['fnCheck'];
                     break;
@@ -159,11 +155,22 @@ class Route implements \Intahwebz\Route {
         $currentPosition = 0;
         $this->regex = '';
 
+        if ($this->name == 'image' || $this->name == 'pictures') {
+            echo "bar";
+        }
+        
+        $matchCount = 0;
+
+        $lastRequiredVarPosition = false;
+
         foreach ($matches as $match) {
+
+            $matchCount++;
+            
             $variableNameWithWrapping = $match[0][0]; // '/{page}'
             $variableNameWithWrappingPosition = $match[0][1]; // '/{page}'
 
-            $variableName = $match[1][0];
+            $variableName = $match[1][0]; //'page'
             //$variableNamePosition = $match[1][1];
 
             if($currentPosition < $variableNameWithWrappingPosition){
@@ -195,16 +202,29 @@ class Route implements \Intahwebz\Route {
                 $optional
             );
 
-            if ($optional) {
-                $lastPos = strlen($this->regex) - 1;
-                $lastSlash = strrpos($this->regex, '/');
+//            if ($optional == true ||
+//                array_key_exists($variableName, $this->defaults) == true) {
+//            }
+//            else {
+//                $lastRequiredVarPosition = strlen($this->regex);
+//            }
 
-                if ($lastSlash == $lastPos) {
-                    $this->regex = substr($this->regex, 0, -1)."(?:/)?";
-                }
+            $varRegex = $routerVariable->getRegex();
+
+            //TODO - I am really not sure if this is a good idea - it appears far too magic.
+            //It would be less magic to only have the variables which are explicitly marked as 
+            //optional to be, er, optional, so excluding the ones that have defaults. 
+
+            $lastPos = strlen($this->regex) - 1;
+            $lastSlash = strrpos($this->regex, '/');
+
+            if ($lastSlash == $lastPos) {
+                $varRegex = $routerVariable->getRegex('/');
+                $this->regex = substr($this->regex, 0, -1);
             }
 
-            $this->regex .= $routerVariable->getRegex();
+
+            $this->regex .= $varRegex;
             $this->variables[] = $routerVariable;
 
             $currentPosition = $variableNameWithWrappingPosition + mb_strlen($variableNameWithWrapping);

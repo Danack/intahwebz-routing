@@ -22,20 +22,12 @@ class RouteVariable {
         $this->requirement = $requirement;
     }
 
-//    function setRequirement($requirement) {
-//        $this->requirement = $requirement;
-//    }
-//
-//    function  setDefault($default) {
-//        $this->default = $default;
-//    }
-
     /**
      * Converts requirements for variables into perl style regexes.
      * e.g. {name}, requirement => 'dan|ack' will only match those two possibilities.
      * @return string
      */
-    function getRegex() {
+    function getRegex($optionalPrefix = false) {
         if($this->requirement != NULL){
             $regex = "(?<".$this->name.">".$this->requirement.")";
         }
@@ -44,7 +36,16 @@ class RouteVariable {
         }
 
         if ($this->optional == true || $this->default !== null) {
-            $regex .= "?";
+            if ($optionalPrefix) {
+                $regex = '(?:'.$optionalPrefix.$regex.")";
+            }
+
+            $regex .= '?';
+        }
+        else {
+            if ($optionalPrefix) {
+                $regex = $optionalPrefix.$regex;
+            }
         }
 
         return $regex;
