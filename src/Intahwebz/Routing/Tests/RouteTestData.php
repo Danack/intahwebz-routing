@@ -217,5 +217,14 @@ return array(
             }
         )
     ),
+
+    array(
+        'name' => 'cssInclude',
+        'pattern' => '/css/cssInclude/{cssInclude}',
+        'callable' => array(
+            'scriptServer',
+            'echoCSSIncludes',
+        ),
+    ),
 );
 

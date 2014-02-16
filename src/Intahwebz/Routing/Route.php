@@ -144,14 +144,8 @@ class Route implements \Intahwebz\Route {
 
         $currentPosition = 0;
         $this->regex = '';
-
-//        if ($this->name == 'image' || $this->name == 'pictures') {
-//            echo "bar";
-//        }
         
         $matchCount = 0;
-
-        $lastRequiredVarPosition = false;
 
         foreach ($matches as $match) {
 

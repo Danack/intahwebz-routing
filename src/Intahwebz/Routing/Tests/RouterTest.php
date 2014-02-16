@@ -26,6 +26,25 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     );
 
 
+    static function getMetadata($testMethod) {
+
+        $metadata = array();
+        
+        $dataProviders = array(
+            'testRoutesValid' =>  'provideRoutesValid'
+        );
+
+        if (isset($dataProviders[$testMethod]) == true) {
+            $metadata['dataProvider'] = $dataProviders[$testMethod];
+        }
+
+        return $metadata;
+    }
+
+    static function setUpBeforeClass() {
+    }
+
+
     protected function setUp(){
         $objectCache = new NullObjectCache();
 
@@ -52,7 +71,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public function checkRouteValid($expection, Request $request)
+    public function testRoutesValid(Request $request, $expection)
     {
         $matchedRoute = $this->router->matchRouteForRequest($request);
 
@@ -92,7 +111,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    public function testRoutes()
+    public function provideRoutesValid()
     {
         $requestDefine = array(
             'hostName' => 'test.local',
@@ -198,13 +217,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 'routeName' => 'pictures',
                 'callable' => array('ImageClass', 'show', ),
             ],
+            [	//Test last slash optional
+                'path' => '/css/cssInclude/15342731330643,jQuery%2Fjquery-ui-1.10.0.custom,css%2Fbasereality,colorPicker',
+                'routeName' => 'cssInclude'
+            ],
         );
 
+        $dataList = array();
+        
         foreach ($testDataArray as $testData) {
+            $data = array();
+
             $request = clone $blankRequest;
             $request->setPath($testData['path']);
-            $this->checkRouteValid($testData, $request);
+            $data[0] = $request;
+            $data[1] = $testData;
+
+            $dataList[] = $data;
         }
+
+        return $dataList;
     }
 
     public function testException() {
@@ -273,9 +305,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $this->router->matchRouteForRequest($deniedRequest);
 
     }
-    
-    
-    
 }
 
 
