@@ -30,15 +30,11 @@ class Router implements \Intahwebz\Router {
      */
     var $objectCache;
 
-    var $domain;
-
     function __construct(
-        \Intahwebz\Domain $domain,
         ObjectCache $objectCache,
         $routeCollectionName,
         $pathToRouteInfo
     ){
-        $this->domain = $domain;
         $this->objectCache = $objectCache;
         $this->init($routeCollectionName, $pathToRouteInfo);
     }
@@ -107,10 +103,15 @@ class Router implements \Intahwebz\Router {
      * @return mixed|string
      * @throws \Intahwebz\Exception\UnsupportedOperationException
      */
-    function generateURLForRoute($routeName, $parameters = array(), $absolute = false){
+    function generateURLForRoute(
+        $routeName, 
+        \Intahwebz\Domain $domain = null,
+        $parameters = array(), 
+        $absolute = false) 
+    {
         foreach ($this->routesByName as $name => $route) {
             if($name == $routeName){
-                return $route->generateURL($this->domain, $parameters, $absolute);
+                return $route->generateURL($domain, $parameters, $absolute);
             }
         }
 
@@ -141,7 +142,6 @@ class Router implements \Intahwebz\Router {
         
         $route = new \Intahwebz\Routing\Route($routingInfo);
         $this->routesByName[] = $route;
-     //   $this->objectCache->put($routeCollectionName, $this->routesByName, 60);
     }   
 }
 
