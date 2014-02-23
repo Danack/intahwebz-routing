@@ -355,21 +355,28 @@ class Route implements \Intahwebz\Route {
             $patternToGenerate = mb_substr($patternToGenerate, 0, $actualRequired);
         }
 
-        foreach($this->variables as $routeVariable){
+        foreach($this->variables as $routeVariable) {
             $variableName = $routeVariable->name;
             if(array_key_exists($variableName, $parameters) == true){
                 $search[] = '{'.$variableName.'}';
                 $replace[] = $parameters[$variableName];
                 unset($parameters[$variableName]);
             }
-            else if($routeVariable->default !== null){
+            else if($routeVariable->default !== null) {
                 $search[] = '{'.$variableName.'}';
                 $replace[] = $routeVariable->default;
+            }
+            else if ($routeVariable->optional !== null) {
+                $search[] = '{'.$variableName.'}';
+                $replace[] = '';
             }
             else{
                 throw new UnsupportedOperationException("Cannot generate route '".$this->name."'. Parameter '".$routeVariable->name."' is not set and has no default.");
             }
         }
+
+        $search[] = '//'; 
+        $replace[] = '/';
 
         $url = str_replace($search, $replace, $patternToGenerate);
 

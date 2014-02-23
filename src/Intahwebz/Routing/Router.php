@@ -12,6 +12,7 @@ use Intahwebz\MatchedRoute;
 class Router implements \Intahwebz\Router {
 
     use \Intahwebz\SafeAccess;
+    use \Intahwebz\Cache\KeyName;
 
     /**
      * @var $routesByName Route[]
@@ -22,7 +23,7 @@ class Router implements \Intahwebz\Router {
 
     public $cacheRouteInfo = true;
 
-    private $name;
+    //private $name;
 
     /**
      * @var ObjectCache
@@ -48,9 +49,9 @@ class Router implements \Intahwebz\Router {
      * @param $pathToRouteInfo
      */
     function init($routeCollectionName, $pathToRouteInfo) {
-        $this->name = $routeCollectionName;
 
-        $this->routesByName = $this->objectCache->get($routeCollectionName);
+        $keyname = $this->getClassKey($routeCollectionName);
+        $this->routesByName = $this->objectCache->get($keyname);
 
         if ($this->routesByName) {
             return;
@@ -62,10 +63,9 @@ class Router implements \Intahwebz\Router {
         else {
             $routingInfo = require $pathToRouteInfo;
         }
-        
-        
+
         $this->initRouting($routingInfo);
-        $this->objectCache->put($routeCollectionName, $this->routesByName, 60);
+        $this->objectCache->put($keyname, $this->routesByName, 60);
     }
 
     /**
@@ -86,7 +86,6 @@ class Router implements \Intahwebz\Router {
      *
      * @param $request
      * @return MatchedRoute
-     * @throws RouteMissingException
      */
     function matchRouteForRequest(Request $request){
         /** @noinspection PhpUnusedLocalVariableInspection */
@@ -98,13 +97,7 @@ class Router implements \Intahwebz\Router {
             }
         }
 
-        throw new RouteMissingException("Could not route request with path: ".$request->getPath());
-    }
-
-    //TODO - this is still crap
-    function generateURL(Routable $routable,  $absolute = false){
-        $routeNameType = $routable->getRouteName().'_List';
-        return $this->generateURLForRoute($routeNameType, $routable->getRouteParams(), $absolute);
+        return null;
     }
 
     /**
@@ -127,7 +120,7 @@ class Router implements \Intahwebz\Router {
     /**
      * @param $routeName
      * @return Route
-     * @throws RouteMissingException
+     * @throws UnsupportedOperationException
      */
     function getRoute($routeName) {
         foreach ($this->routesByName as $name => $route) {
@@ -136,7 +129,7 @@ class Router implements \Intahwebz\Router {
             }
         }
 
-        throw new RouteMissingException( "Could not find route '$routeName'");
+        throw new UnsupportedOperationException("Could not find route [$routeName] to generateURL for.");
     }
 
     /**

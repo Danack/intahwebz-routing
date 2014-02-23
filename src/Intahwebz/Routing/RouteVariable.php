@@ -12,7 +12,7 @@ class RouteVariable {
 
     public $default = NULL;
 
-    private $optional = false;
+    public $optional = false;
 
     public function __construct($name, $nameWithWrapping, $default, $requirement, $optional){
         $this->name = $name;
