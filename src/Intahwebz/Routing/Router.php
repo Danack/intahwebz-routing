@@ -138,5 +138,17 @@ class Router implements \Intahwebz\Router {
 
         throw new RouteMissingException( "Could not find route '$routeName'");
     }
+
+    /**
+     * @param $pattern
+     */
+    function addRoute($pattern) {
+        $routingInfo = array();
+        $routingInfo['pattern'] = $pattern;
+        
+        $route = new \Intahwebz\Routing\Route($routingInfo);
+        $this->routesByName[] = $route;
+     //   $this->objectCache->put($routeCollectionName, $this->routesByName, 60);
+    }   
 }
 
