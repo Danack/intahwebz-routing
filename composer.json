@@ -2,18 +2,20 @@
     "name": "intahwebz/routing",
 
     "require":{
-        "intahwebz/core": "*",
+        "intahwebz/core": "0.2.0",
         "intahwebz/mb_extra": "*"
     },
-
 
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/Danack/Auryn"
+        },
+        {
+            "type": "vcs",
+            "url": "/documents/projects/github/intahwebz-core"
         }
     ],
-
 
     "require-dev": {
         "intahwebz/jig": "dev-master",
