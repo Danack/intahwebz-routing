@@ -71,6 +71,11 @@ class Route implements \Intahwebz\Route {
             switch($key) {
                 case ('requirements'): {
                     $this->requirements = $value;
+                    if(is_array($value)) {
+                        if(array_key_exists('_method', $value)) {
+                           $this->methodRequirement = $value['_method'];
+                        }
+                    }
                     break;
                 }
                 case ('_method'): {
@@ -343,7 +348,8 @@ class Route implements \Intahwebz\Route {
      * @throws \Intahwebz\Exception\UnsupportedOperationException
      * @return mixed|string
      */
-    function generateURL(\Intahwebz\Domain $domain, $parameters, $absolute = false) {
+    public function generateURL($parameters, \Intahwebz\Domain $domain = null, $absolute = false) {
+
         $search = array();
         $replace = array();
 

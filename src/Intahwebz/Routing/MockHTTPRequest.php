@@ -27,4 +27,8 @@ class MockHTTPRequest extends AbstractRequest {
     function getReferrer() {
         // TODO: Implement getReferrer() method.
     }
+
+    function checkIfModifiedHeader($unixTime) {
+        //TODO Implement
+    }
 }

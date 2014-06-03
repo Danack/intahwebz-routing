@@ -111,7 +111,7 @@ class Router implements \Intahwebz\Router {
     {
         foreach ($this->routesByName as $name => $route) {
             if($name == $routeName){
-                return $route->generateURL($domain, $parameters, $absolute);
+                return $route->generateURL($parameters, $domain, $absolute);
             }
         }
 
