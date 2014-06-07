@@ -30,9 +30,15 @@ class DefinedRequest extends AbstractRequest implements \Intahwebz\Request {
         }
     }
 
+
+    function checkIfModifiedHeader($unixTime) {
+        
+    }
+    
     function getReferrer() {
         return null;
     }
+
     function getUploadedFile($formFileName) {
         assert(strlen($formFileName) > 0);
         return null;
