@@ -2,7 +2,7 @@
     "name": "intahwebz/routing",
 
     "require":{
-        "intahwebz/core": "0.2.0",
+        "intahwebz/core": ">=0.2.4",
         "intahwebz/mb_extra": "*"
     },
 
