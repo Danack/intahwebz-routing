@@ -25,6 +25,7 @@ class RouteVariable {
     /**
      * Converts requirements for variables into perl style regexes.
      * e.g. {name}, requirement => 'dan|ack' will only match those two possibilities.
+     * @param bool $optionalPrefix
      * @return string
      */
     function getRegex($optionalPrefix = false) {

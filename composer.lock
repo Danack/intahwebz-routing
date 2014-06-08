@@ -3,21 +3,15 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2748e273e51f0b9515562bf9018ee7c0",
+    "hash": "5f17860d23316f88e4014ebb3fd4211b",
     "packages": [
         {
             "name": "intahwebz/core",
-            "version": "dev-master",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Danack/intahwebz-core.git",
-                "reference": "2289355f06fa8ed94f7ebfd9582f8adb76c42e9a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Danack/intahwebz-core/zipball/2289355f06fa8ed94f7ebfd9582f8adb76c42e9a",
-                "reference": "2289355f06fa8ed94f7ebfd9582f8adb76c42e9a",
-                "shasum": ""
+                "url": "/documents/projects/github/intahwebz-core",
+                "reference": "3bfe5e41de48428d04c1e4ef9f0bf211bb7d5998"
             },
             "require": {
                 "psr/log": "~1.0"
@@ -28,7 +22,6 @@
                     "Intahwebz": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -36,8 +29,7 @@
                 {
                     "name": "Dan Ackroyd",
                     "email": "Danack@basereality.com",
-                    "homepage": "http://www.basereality.com",
-                    "role": "Developer"
+                    "homepage": "http://www.basereality.com"
                 }
             ],
             "description": "Core library that defines common interfaces used by the rest of the intahwebz..",
@@ -46,11 +38,11 @@
                 "intahwebz",
                 "library"
             ],
-            "time": "2014-01-25 00:59:11"
+            "time": "2014-02-23 20:37:51"
         },
         {
             "name": "intahwebz/mb_extra",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Danack/mb_extra.git",
@@ -80,7 +72,7 @@
                     "name": "Dan Ackroyd",
                     "email": "Danack@basereality.com",
                     "homepage": "http://www.basereality.com",
-                    "role": "Developer"
+                    "role": "Creator / Main Developer / Cake baker"
                 }
             ],
             "description": "A collection of PHP multi-byte string functions that are not present in the mb_string extension.",
@@ -138,25 +130,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Danack/Jig.git",
-                "reference": "a1f26727e4984f87fb4fce3f0a2db818d4631ca2"
+                "reference": "0218e3a0e5e1e323b99e78d929e628efed5de972"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Danack/Jig/zipball/a1f26727e4984f87fb4fce3f0a2db818d4631ca2",
-                "reference": "a1f26727e4984f87fb4fce3f0a2db818d4631ca2",
+                "url": "https://api.github.com/repos/Danack/Jig/zipball/0218e3a0e5e1e323b99e78d929e628efed5de972",
+                "reference": "0218e3a0e5e1e323b99e78d929e628efed5de972",
                 "shasum": ""
             },
             "require": {
-                "intahwebz/core": "dev-master",
-                "intahwebz/mb_extra": "dev-master",
+                "intahwebz/core": "*",
+                "intahwebz/mb_extra": "1.0.0",
                 "nikic/php-parser": "v0.9.3",
                 "psr/log": "~1.0",
                 "rdlowrey/auryn": "dev-PluginExperiment2"
             },
             "require-dev": {
-                "intahwebz/core": "dev-master",
-                "intahwebz/form": "dev-master",
-                "intahwebz/routing": "dev-master",
+                "intahwebz/form": "0.5.1",
+                "intahwebz/routing": "~0.9",
                 "phpunit/phpunit": "3.7.*"
             },
             "type": "library",
@@ -184,7 +175,7 @@
                 "intahwebz",
                 "library"
             ],
-            "time": "2014-01-04 15:15:19"
+            "time": "2014-05-02 14:07:45"
         },
         {
             "name": "nikic/php-parser",
@@ -227,22 +218,22 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.13",
+            "version": "1.2.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "466e7cd2554b4e264c9e3f31216d25ac0e5f3d94"
+                "reference": "6ef2bf3a1c47eca07ea95f0d8a902a6340390b34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/466e7cd2554b4e264c9e3f31216d25ac0e5f3d94",
-                "reference": "466e7cd2554b4e264c9e3f31216d25ac0e5f3d94",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ef2bf3a1c47eca07ea95f0d8a902a6340390b34",
+                "reference": "6ef2bf3a1c47eca07ea95f0d8a902a6340390b34",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "phpunit/php-file-iterator": ">=1.3.0@stable",
-                "phpunit/php-text-template": ">=1.1.1@stable",
+                "phpunit/php-text-template": ">=1.2.0@stable",
                 "phpunit/php-token-stream": ">=1.1.3@stable"
             },
             "require-dev": {
@@ -284,7 +275,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-09-10 08:14:32"
+            "time": "2014-03-28 10:53:45"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -333,16 +324,16 @@
         },
         {
             "name": "phpunit/php-text-template",
-            "version": "1.1.4",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-text-template.git",
-                "reference": "5180896f51c5b3648ac946b05f9ec02be78a0b23"
+                "reference": "206dfefc0ffe9cebf65c413e3d0e809c82fbf00a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/5180896f51c5b3648ac946b05f9ec02be78a0b23",
-                "reference": "5180896f51c5b3648ac946b05f9ec02be78a0b23",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/206dfefc0ffe9cebf65c413e3d0e809c82fbf00a",
+                "reference": "206dfefc0ffe9cebf65c413e3d0e809c82fbf00a",
                 "shasum": ""
             },
             "require": {
@@ -373,7 +364,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2012-10-31 18:15:28"
+            "time": "2014-01-30 17:20:04"
         },
         {
             "name": "phpunit/php-timer",
@@ -421,16 +412,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "5220af2a7929aa35cf663d97c89ad3d50cf5fa3e"
+                "reference": "ad4e1e23ae01b483c16f600ff1bebec184588e32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/5220af2a7929aa35cf663d97c89ad3d50cf5fa3e",
-                "reference": "5220af2a7929aa35cf663d97c89ad3d50cf5fa3e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/ad4e1e23ae01b483c16f600ff1bebec184588e32",
+                "reference": "ad4e1e23ae01b483c16f600ff1bebec184588e32",
                 "shasum": ""
             },
             "require": {
@@ -467,43 +458,42 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2013-09-13 04:58:23"
+            "time": "2014-03-03 05:10:30"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.29",
+            "version": "3.7.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac"
+                "reference": "ae6cefd7cc84586a5ef27e04bae11ee940ec63dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
-                "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ae6cefd7cc84586a5ef27e04bae11ee940ec63dc",
+                "reference": "ae6cefd7cc84586a5ef27e04bae11ee940ec63dc",
                 "shasum": ""
             },
             "require": {
+                "ext-ctype": "*",
                 "ext-dom": "*",
+                "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": "~1.2.1",
-                "phpunit/php-file-iterator": ">=1.3.1",
-                "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.4",
-                "phpunit/phpunit-mock-objects": "~1.2.0",
+                "phpunit/php-code-coverage": "~1.2",
+                "phpunit/php-file-iterator": "~1.3",
+                "phpunit/php-text-template": "~1.1",
+                "phpunit/php-timer": "~1.0",
+                "phpunit/phpunit-mock-objects": "~1.2",
                 "symfony/yaml": "~2.0"
             },
             "require-dev": {
-                "pear-pear/pear": "1.9.4"
+                "pear-pear.php.net/pear": "1.9.4"
             },
             "suggest": {
-                "ext-json": "*",
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
-                "phpunit/php-invoker": ">=1.1.0,<1.2.0"
+                "phpunit/php-invoker": "~1.1"
             },
             "bin": [
                 "composer/bin/phpunit"
@@ -541,7 +531,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-01-15 06:46:38"
+            "time": "2014-04-30 12:24:19"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -646,17 +636,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.1",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0"
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4e1a237fc48145fae114b96458d799746ad89aa0",
-                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b4b09c68ec2f2727574544ef0173684281a5033c",
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c",
                 "shasum": ""
             },
             "require": {
@@ -665,7 +655,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -680,7 +670,9 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Symfony Community",
@@ -689,25 +681,25 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-12-28 08:12:03"
+            "time": "2014-05-16 14:25:18"
         },
         {
             "name": "zendframework/zend-permissions-acl",
-            "version": "2.2.5",
+            "version": "2.3.0",
             "target-dir": "Zend/Permissions/Acl",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendPermissionsAcl.git",
-                "reference": "6978e3eb9e726b60777fd9a329bc9ab5aa064931"
+                "reference": "578391c391ca8fa5a877420acfdc98c5cf7ebf6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendPermissionsAcl/zipball/6978e3eb9e726b60777fd9a329bc9ab5aa064931",
-                "reference": "6978e3eb9e726b60777fd9a329bc9ab5aa064931",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendPermissionsAcl/zipball/578391c391ca8fa5a877420acfdc98c5cf7ebf6a",
+                "reference": "578391c391ca8fa5a877420acfdc98c5cf7ebf6a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.3.23"
             },
             "type": "library",
             "extra": {
@@ -730,7 +722,7 @@
                 "acl",
                 "zf2"
             ],
-            "time": "2013-06-12 19:45:49"
+            "time": "2014-03-14 16:21:57"
         }
     ],
     "aliases": [
@@ -738,8 +730,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "intahwebz/core": 20,
-        "intahwebz/mb_extra": 20,
         "intahwebz/jig": 20,
         "rdlowrey/auryn": 20
     },

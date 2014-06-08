@@ -4,7 +4,6 @@ namespace Intahwebz\Routing;
 
 use Intahwebz\ObjectCache;
 use Intahwebz\Exception\UnsupportedOperationException;
-use Intahwebz\Routable;
 use Intahwebz\Route;
 use Intahwebz\Request;
 use Intahwebz\MatchedRoute;
@@ -22,8 +21,6 @@ class Router implements \Intahwebz\Router {
     public $routingInfo;
 
     public $cacheRouteInfo = true;
-
-    //private $name;
 
     /**
      * @var ObjectCache
@@ -93,22 +90,23 @@ class Router implements \Intahwebz\Router {
             }
         }
 
-        return null;
+        throw new \Intahwebz\Routing\RouteMissingException("Failed to match request to route.");
     }
 
     /**
      * @param $routeName
+     * @param \Intahwebz\Domain $domain
      * @param array $parameters
      * @param bool $absolute
-     * @return mixed|string
      * @throws \Intahwebz\Exception\UnsupportedOperationException
+     * @return mixed|string
      */
     function generateURLForRoute(
-        $routeName, 
+        $routeName,
+        $parameters = array(),
         \Intahwebz\Domain $domain = null,
-        $parameters = array(), 
-        $absolute = false) 
-    {
+        $absolute = false
+    ) {
         foreach ($this->routesByName as $name => $route) {
             if($name == $routeName){
                 return $route->generateURL($parameters, $domain, $absolute);
@@ -130,7 +128,7 @@ class Router implements \Intahwebz\Router {
             }
         }
 
-        throw new UnsupportedOperationException("Could not find route [$routeName] to generateURL for.");
+        throw new \Intahwebz\Routing\RouteMissingException("Could not find route [$routeName] to generateURL for.");
     }
 
     /**

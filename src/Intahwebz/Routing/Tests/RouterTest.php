@@ -5,9 +5,46 @@ namespace Intahwebz\Tests\Routing;
 
 use Intahwebz\Cache\NullObjectCache;
 
+use Intahwebz\Domain;
 use Intahwebz\Request;
 use Intahwebz\Routing\Router;
 use Intahwebz\Routing\DefinedRequest;
+
+
+class DomainTest implements Domain {
+
+
+    function getTestDomainInfo() {
+
+        $domainInfo = new \Intahwebz\DomainInfo(
+            'localhost.test',
+            'localhost.test',
+            'www'.'localhost.test',
+            'http',
+            true,
+            '/'
+        );
+
+        return $domainInfo;
+    }
+
+    function getContentDomain($contentID){
+        return $this->getTestDomainInfo();
+    }
+
+    /**
+     * @return \Intahwebz\DomainInfo
+     */
+    function getDomainInfo() {
+        return $this->getTestDomainInfo();
+    }
+
+    function getURLForCurrentDomain($path, $secure = FALSE) {
+        return "http://localhost.test".$path;
+    }
+    
+}
+
 
 class RouterTest extends \PHPUnit_Framework_TestCase {
 
@@ -25,21 +62,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         'path' => '/',
     );
 
-
-    static function getMetadata($testMethod) {
-
-        $metadata = array();
-        
-        $dataProviders = array(
-            'testRoutesValid' =>  'provideRoutesValid'
-        );
-
-        if (isset($dataProviders[$testMethod]) == true) {
-            $metadata['dataProvider'] = $dataProviders[$testMethod];
-        }
-
-        return $metadata;
-    }
 
     static function setUpBeforeClass() {
     }
@@ -60,8 +82,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
         $domain = new \Intahwebz\DomainExample($blankRequest, 'basereality.test');
 
-        $this->router = new Router($domain,
-            $objectCache, 
+        $this->router = new Router(
+            $objectCache,
             "RouteUnitTests", 
             dirname(__DIR__)."/Tests/RouteTestData.php"
         );
@@ -71,6 +93,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    /**
+     * @dataProvider provideRoutesValid
+     */
     public function testRoutesValid(Request $request, $expection)
     {
         $matchedRoute = $this->router->matchRouteForRequest($request);
@@ -95,11 +120,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
             foreach ($expection['routeParams'] as $routeParam) {
                 $routeParamName = $routeParam[0];
                 $routeParamValue = $routeParam[1];
-                
                 $mergedParams = $matchedRoute->getMergedParameters();
-
-                //$matchedRoute->getParams();
-
                 $this->assertArrayHasKey($routeParamName, $mergedParams);
 
                 $this->assertEquals(
@@ -244,7 +265,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $requestDefine = $this->standardRequestDefine;
         $requestDefine['path'] = '/ThisDoesntExist';
         $blankRequest = new DefinedRequest($requestDefine);
-        $this->router->matchRouteForRequest($blankRequest);
+        $matchedRoute = $this->router->matchRouteForRequest($blankRequest);
         $this->fail('An expected exception has not been raised.');
     }
 
@@ -256,11 +277,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         ];
 
         $URL = $this->router->generateURLForRoute('blogPost', $params);
+        
+        
+        $domain = new DomainTest();
 
-        $absoluteURL = $this->router->generateURLForRoute('blogPost', $params, true);
+        $absoluteURL = $this->router->generateURLForRoute('blogPost', $params, $domain, true);
 
         $this->assertEquals('/blog/5/ABlogPost', $URL, "Relative URL not correct");
-        $this->assertEquals('http://basereality.test/blog/5/ABlogPost', $absoluteURL, "Absolute URL not correct");
+        $this->assertEquals('http://localhost.test/blog/5/ABlogPost', $absoluteURL, "Absolute URL not correct");
     }
 
     public function testGenerateURLForUnknownRoute() {
@@ -303,7 +327,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
         $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
         $this->router->matchRouteForRequest($deniedRequest);
-
+        
+        throw new \Intahwebz\Routing\RouteMissingException("Could not find route.");
     }
 }
 

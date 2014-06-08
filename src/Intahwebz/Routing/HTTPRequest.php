@@ -147,11 +147,12 @@ class HTTPRequest extends AbstractRequest {
 
     function checkIfModifiedHeader($unixTime) {
         if (array_key_exists("HTTP_IF_MODIFIED_SINCE", $this->server) == true) {
-            if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == @filemtime($finalFilename)) {
+            if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $unixTime) {
                 //header("HTTP/1.1 304 Not Modified");
                 return "HTTP/1.1 304 Not Modified";
             }
         }
+        return null;
     }
 }
 
