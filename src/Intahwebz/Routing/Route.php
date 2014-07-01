@@ -267,7 +267,8 @@ class Route implements \Intahwebz\Route {
         $params = array();
 
         foreach($this->variables as $routeVariable){
-            if(array_key_exists($routeVariable->name, $matches) == true){
+            if(array_key_exists($routeVariable->name, $matches) == true && 
+                strlen($matches[$routeVariable->name]) != 0) {
                 $params[$routeVariable->name] = $matches[$routeVariable->name];
             }
             else if($routeVariable->default != null){

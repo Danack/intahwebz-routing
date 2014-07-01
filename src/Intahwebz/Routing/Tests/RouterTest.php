@@ -105,7 +105,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($route, "Failed to match route.");
 
         if (array_key_exists('routeName', $expection) == true) {
-            $this->assertEquals($expection['routeName'], $route->getName());
+            $this->assertSame($expection['routeName'], $route->getName());
         }
 
         if (array_key_exists('classMethod', $expection) == true) {
@@ -113,7 +113,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         }
 
         if (array_key_exists('callable', $expection) == true) {
-            $this->assertEquals($expection['callable'], $route->get('callable'));
+            $this->assertSame($expection['callable'], $route->get('callable'));
         }
 
         if (array_key_exists('routeParams', $expection) == true) {
@@ -123,7 +123,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 $mergedParams = $matchedRoute->getMergedParameters();
                 $this->assertArrayHasKey($routeParamName, $mergedParams);
 
-                $this->assertEquals(
+                $this->assertSame(
                     $routeParamValue, 
                     $mergedParams[$routeParamName], 
                     "Route param doesn't match expected value:"
@@ -156,7 +156,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 'routeName' => 'blogPost',
                 'callable' => ['BaseReality\\Controller\\Blog', 'display'],
                 'routeParams' => [
-                    ['blogPostID', 5,],
+                    ['blogPostID', '5',],
                     ['title', 'BlogTitle']
                 ]
             ],
@@ -166,7 +166,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 'routeName' => 'blogPost',
                 'callable' => ['BaseReality\\Controller\\Blog', 'display'],
                 'routeParams' => [
-                     ['blogPostID', 5,],
+                     ['blogPostID', '5',],
                      ['title', 'BlogTitle'],
                      ['format', 'text']
                  ]
@@ -215,8 +215,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 //'classMethod' => 'BaseReality\\Controller\\Management\\StaticFile::display',
                 'callable' => ['BaseReality\\ImageController', 'showImage'],
                 'routeParams' => [
-                    ['imageID', 1234,],
-                    ['size', 256],
+                    ['imageID', '1234',],
+                    ['size', '256'],
                     ['filename', 'someImage.jpg'],
                     ['path', 'image']
                 ]
@@ -227,7 +227,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
                 //'classMethod' => 'BaseReality\\Controller\\Management\\StaticFile::display',
                 'callable' => ['BaseReality\\ImageController', 'showImage'],
                 'routeParams' => [
-                    ['imageID', 1234,],
+                    ['imageID', '1234',],
                     ['size', null],
                     ['filename', 'someImage.jpg'],
                     ['path', 'image']
@@ -283,8 +283,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
         $absoluteURL = $this->router->generateURLForRoute('blogPost', $params, $domain, true);
 
-        $this->assertEquals('/blog/5/ABlogPost', $URL, "Relative URL not correct");
-        $this->assertEquals('http://localhost.test/blog/5/ABlogPost', $absoluteURL, "Absolute URL not correct");
+        $this->assertSame('/blog/5/ABlogPost', $URL, "Relative URL not correct");
+        $this->assertSame('http://localhost.test/blog/5/ABlogPost', $absoluteURL, "Absolute URL not correct");
     }
 
     public function testGenerateURLForUnknownRoute() {
@@ -294,7 +294,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetRoute() {
         $route = $this->router->getRoute('blogPost');
-        $this->assertEquals('blogPost', $route->getName(), "Route not correct");
+        $this->assertSame('blogPost', $route->getName(), "Route not correct");
     }
 
     public function testGetRouteMissingException() {
@@ -323,7 +323,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         
         $route = $matchedRoute->getRoute();
         
-        $this->assertEquals($route->getName(), 'ipRestrict');
+        $this->assertSame($route->getName(), 'ipRestrict');
 
         $this->setExpectedException('\Intahwebz\Routing\RouteMissingException');
         $this->router->matchRouteForRequest($deniedRequest);

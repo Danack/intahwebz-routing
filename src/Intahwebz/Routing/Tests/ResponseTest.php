@@ -29,7 +29,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($response->isOK(200), "Default isOK(200) isn't true.");
         $response->setErrorStatus(['reason' => 'This is a test error']);
 
-        $this->assertEquals($response->getStatus(), 501, 'Incorrect default error code');
+        $this->assertSame($response->getStatus(), 501, 'Incorrect default error code');
         $this->assertFalse($response->isOK(), "Error isn't making isOK false.");
     }
 
