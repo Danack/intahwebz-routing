@@ -15,6 +15,7 @@ abstract class AbstractRequest implements Request {
     public $method;
     public $clientIP;
     public $requestedFormat;
+    public $protocol;
 
     /**
      * This should only be used in exceptional circumstances.
