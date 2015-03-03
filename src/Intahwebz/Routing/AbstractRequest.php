@@ -63,7 +63,9 @@ abstract class AbstractRequest implements Request {
     function getClientIP() {
         return $this->clientIP;
     }
-    
+    function getProtocol() {
+        return $this->protocol;
+    }
     /**
      * Priority = global request cookie session
      *

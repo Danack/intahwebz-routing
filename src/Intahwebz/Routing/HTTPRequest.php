@@ -31,6 +31,15 @@ class HTTPRequest extends AbstractRequest {
         $this->server = $server;
     }
 
+    function getHeader($name) {
+        if (array_key_exists($name, $this->server) == true) {
+            //'HTTP_IF_MODIFIED_SINCE'
+            return $this->server[$name];
+        }
+        
+        return null;
+    }
+    
     function determineScheme($server) {
         $this->scheme = 'http';
 
